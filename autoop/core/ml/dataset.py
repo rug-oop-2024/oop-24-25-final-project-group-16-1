@@ -1,28 +1,31 @@
 from autoop.core.ml.artifact import Artifact
-from abc import ABC, abstractmethod
+from typing import Optional, Dict, Any
 import pandas as pd
 import io
 
-class Dataset(Artifact):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(type="dataset", *args, **kwargs)
+class Dataset(Artifact):
+    def __init__(self, name: str, metadata: Optional[Dict[str, Any]] = None, asset_path: str = "", version: str = "1.0.0"):
+        # Call parent class constructor with the appropriate arguments
+        super().__init__(name=name, artifact_type="dataset", metadata=metadata)
+        self.asset_path = asset_path
+        self.version = version
 
     @staticmethod
-    def from_dataframe(data: pd.DataFrame, name: str, asset_path: str, version: str="1.0.0"):
+    def from_dataframe(data: pd.DataFrame, name: str, asset_path: str, version: str = "1.0.0"):
         return Dataset(
             name=name,
             asset_path=asset_path,
-            data=data.to_csv(index=False).encode(),
-            version=version,
+            metadata={'data': data.to_csv(index=False), 'version': version}
         )
-        
+
     def read(self) -> pd.DataFrame:
-        bytes = super().read()
-        csv = bytes.decode()
-        return pd.read_csv(io.StringIO(csv))
-    
-    def save(self, data: pd.DataFrame) -> bytes:
-        bytes = data.to_csv(index=False).encode()
-        return super().save(bytes)
-    
+        # Assuming the artifact's metadata contains the CSV data as a string
+        csv_data = self.metadata['data']
+        return pd.read_csv(io.StringIO(csv_data))
+
+    def save(self, data: pd.DataFrame) -> None:
+        # Save the data into the metadata field and persist the artifact
+        self.metadata['data'] = data.to_csv(index=False)
+        super().save()
+
