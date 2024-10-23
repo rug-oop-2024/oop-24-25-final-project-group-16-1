@@ -12,7 +12,7 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
         List[Feature]: List of features with their types.
     """
     features = []
-    df = dataset.read()  # Assuming dataset.read() returns a DataFrame
+    df = dataset.read()
 
     for column in df.columns:
         if pd.api.types.is_float_dtype(df[column]):
@@ -28,4 +28,3 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
         features.append(feature)
 
     return features
-

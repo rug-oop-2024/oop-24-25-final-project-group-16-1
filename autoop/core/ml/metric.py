@@ -119,7 +119,9 @@ class R2Score(Metric):
             )
         ss_total = np.sum((np.array(y_true) - np.mean(y_true)) ** 2)
         ss_residual = np.sum((np.array(y_true) - np.array(y_pred)) ** 2)
-        return 1 - (ss_residual / ss_total) if ss_total > 0 else 0.0
+        if ss_total >0:
+            return 1 - (ss_residual / ss_total)
+        return 0.0
 
 
 class Precision(Metric):
