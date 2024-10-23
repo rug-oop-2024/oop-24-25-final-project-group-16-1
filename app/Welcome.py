@@ -1,5 +1,7 @@
-from autoop.core.ml.artifact import Artifact
+import sys
+import os
 import streamlit as st
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 st.set_page_config(
     page_title="Hello",
