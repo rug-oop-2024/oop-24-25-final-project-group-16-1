@@ -7,17 +7,17 @@ class Model(ABC, Artifact):
         super().__init__(name=name, artifact_type=artifact_type)
     
     @abstractmethod
-    def train(self, X: Any, y: Any) -> None:
-        """Train the model with input features X and target labels y."""
+    def train(self, x: Any, y: Any) -> None:
+        """Train the model with input features x and target labels y."""
         pass
 
     @abstractmethod
-    def predict(self, X: Any) -> Any:
-        """Predict labels or values given input features X."""
+    def predict(self, x: Any) -> Any:
+        """Predict labels or values given input features x."""
         pass
 
     @abstractmethod
-    def evaluate(self, X: Any, y: Any) -> float:
+    def evaluate(self, x: Any, y: Any) -> float:
         """Evaluate the model performance on test data."""
         pass
 

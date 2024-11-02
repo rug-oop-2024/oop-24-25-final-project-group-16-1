@@ -34,14 +34,14 @@ class Pipeline():
 
     def __str__(self):
         return f"""
-Pipeline(
-    model={self._model.type},
-    input_features={list(map(str, self._input_features))},
-    target_feature={str(self._target_feature)},
-    split={self._split},
-    metrics={list(map(str, self._metrics))},
-)
-"""
+        Pipeline(
+            model={self._model.type},
+            input_features={list(map(str, self._input_features))},
+            target_feature={str(self._target_feature)},
+            split={self._split},
+            metrics={list(map(str, self._metrics))},
+        )
+        """
 
     @property
     def model(self):
@@ -100,25 +100,31 @@ Pipeline(
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self):
-        X = self._compact_vectors(self._test_X)
-        Y = self._test_y
-        self._metrics_results = []
+    def _evaluate(self, X: np.array, Y: np.array) -> List[tuple]:
         predictions = self._model.predict(X)
+        metrics_results = []
         for metric in self._metrics:
             result = metric.evaluate(predictions, Y)
-            self._metrics_results.append((metric, result))
-        self._predictions = predictions
+            metrics_results.append((metric, result))
+        return metrics_results, predictions
 
     def execute(self):
         self._preprocess_features()
         self._split_data()
-        self._train()
-        self._evaluate()
-        return {
-            "metrics": self._metrics_results,
-            "predictions": self._predictions,
-        }
         
-
+        self._train()
+        train_X = self._compact_vectors(self._train_X)
+        train_y = self._train_y
+        train_metrics_results, train_predictions = self._evaluate(train_X, train_y)
+        
+        test_X = self._compact_vectors(self._test_X)
+        test_y = self._test_y
+        test_metrics_results, test_predictions = self._evaluate(test_X, test_y)
+        
+        return {
+            "train_metrics": train_metrics_results,
+            "test_metrics": test_metrics_results,
+            "train_predictions": train_predictions,
+            "test_predictions": test_predictions,
+        }
     

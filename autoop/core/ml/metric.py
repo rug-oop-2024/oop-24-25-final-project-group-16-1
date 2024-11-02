@@ -22,7 +22,7 @@ def get_metric(name: str) -> Type['Metric']:
         ValueError: If the metric name is not recognized.
     """
     metrics_map = {
-        "mean_squared_error": Mean2Error,
+        "mean_squared_error": MeanSquaredError,
         "mean_absolute_error": MeanAbsoluteError,
         "r2_score": R2Score,
         "accuracy": Accuracy,
@@ -37,8 +37,7 @@ def get_metric(name: str) -> Type['Metric']:
 
 
 class Metric(ABC):
-    """Base class for all metrics.
-    """
+    """Base class for all metrics."""
     @abstractmethod
     def __call__(self, y_true: List[Any], y_pred: List[Any]) -> float:
         """Calculates the metric based on true and predicted values.
@@ -66,10 +65,12 @@ class Accuracy(Metric):
                 "Length of true labels and predicted labels must match."
             )
         correct = sum(yt == yp for yt, yp in zip(y_true, y_pred))
-        return correct / len(y_true) if len(y_true) > 0 else 0.0
+        if len(y_true) > 0:
+            return correct / len(y_true)
+        return 0.0
 
 
-class Mean2Error(Metric):
+class MeanSquaredError(Metric):
     """Mean Squared Error metric implementation."""
     def __call__(self, y_true: List[float], y_pred: List[float]) -> float:
         """Calculates the Mean Squared Error (MSE).
@@ -119,7 +120,7 @@ class R2Score(Metric):
             )
         ss_total = np.sum((np.array(y_true) - np.mean(y_true)) ** 2)
         ss_residual = np.sum((np.array(y_true) - np.array(y_pred)) ** 2)
-        if ss_total >0:
+        if ss_total > 0:
             return 1 - (ss_residual / ss_total)
         return 0.0
 

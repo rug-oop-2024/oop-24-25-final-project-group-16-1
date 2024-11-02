@@ -15,9 +15,9 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     df = dataset.read()
 
     for column in df.columns:
-        if pd.api.types.is_float_dtype(df[column]):
+        if isinstance(df[column].dtype, pd.Float64Dtype):
             feature_type = "continuous"
-        elif pd.api.types.is_integer_dtype(df[column]):
+        elif isinstance(df[column].dtype, pd.Int64Dtype):
             feature_type = "numerical"
         else:
             feature_type = "categorical"

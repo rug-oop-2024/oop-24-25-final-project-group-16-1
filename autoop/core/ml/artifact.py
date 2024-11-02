@@ -2,6 +2,7 @@ import json
 import os
 import base64
 from typing import Any, Dict, Optional
+from copy import deepcopy
 
 
 class Artifact:
@@ -20,10 +21,53 @@ class Artifact:
         """
         self.name: str = name
         self.artifact_type: str = artifact_type
-        self.metadata: Dict[str, Any] = (
-            metadata if metadata is not None else {}
-        )
-        self.path: str = os.path.join("artifacts", f"{self.name}.json")
+        self._metadata: Dict[str, Any] = {} if metadata is None else metadata
+        self._path: str = os.path.join("artifacts", f"{self.name}.json")
+
+    @property
+    def metadata(self) -> Dict[str, Any]:
+        """
+        Retrieves a deep copy of the metadata dictionary.
+        Returns:
+            Dict[str, Any]: A deep copy of the metadata dictionary associated
+            with the artifact.
+        """
+        return deepcopy(self._metadata)
+
+    @metadata.setter
+    def metadata(self, value: Dict[str, Any]) -> None:
+        """
+        Sets the metadata dictionary for the artifact.
+        Args:
+            value (Dict[str, Any]): A dictionary containing metadata to be
+            associated with the artifact.
+        Raises:
+            TypeError: If the provided value is not a dictionary.
+        """
+        if not isinstance(value, dict):
+            raise TypeError("Metadata must be a dictionary.")
+        self._metadata = value
+
+    @property
+    def path(self) -> str:
+        """
+        Retrieves the file path where the artifact is stored.
+        Returns:
+            str: The path to the JSON file associated with the artifact.
+        """
+        return self._path
+
+    @path.setter
+    def path(self, value: str) -> None:
+        """
+        Prevents direct modification of the path attribute.
+        Args:
+            value (str): Any attempted value to set for the path attribute.
+        Raises:
+            AttributeError: Always raised to indicate that the path attribute
+            is read-only and cannot be directly modified.
+        """
+        raise AttributeError("Path cannot be modified directly.")
 
     def save(self) -> None:
         """Saves the artifact to a JSON file."""
@@ -38,10 +82,11 @@ class Artifact:
         """
         path = os.path.join("artifacts", f"{name}.json")
         with open(path, 'r') as f:
-            data = json.load(f)
-            self.name = data['name']
-            self.artifact_type = data['artifact_type']
-            self.metadata = data['metadata']
+            data = f.read()
+            loaded_artifact = self.fromJSON(data)
+            self.name = loaded_artifact.name
+            self.artifact_type = loaded_artifact.artifact_type
+            self.metadata = loaded_artifact.metadata
 
     def toJSON(self) -> str:
         """Converts the artifact to a JSON string and encodes it in base64.
