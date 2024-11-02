@@ -1,7 +1,5 @@
 import numpy as np
 from autoop.core.ml.model.model import Model
-from copy import deepcopy
-
 
 class NeuralNetwork(Model):
     def __init__(self, 
@@ -10,7 +8,7 @@ class NeuralNetwork(Model):
                  hidden_size: int, 
                  output_size: int, 
                  learning_rate: float = 0.01, 
-                 num_iterations: int = 10000):
+                 num_iterations: int = 10):
         """
         Initializes the Neural Network with given architecture and parameters.
         Args:

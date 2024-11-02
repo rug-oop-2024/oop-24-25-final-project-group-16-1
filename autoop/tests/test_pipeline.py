@@ -12,25 +12,30 @@ from autoop.core.ml.metric import MeanSquaredError
 class TestPipeline(unittest.TestCase):
 
     def setUp(self) -> None:
+        # Fetch data from the openml dataset
         data = fetch_openml(name="adult", version=1, parser="auto")
         df = pd.DataFrame(
             data.data,
             columns=data.feature_names,
         )
+        # Create a Dataset object from the dataframe
         self.dataset = Dataset.from_dataframe(
             name="adult",
             asset_path="adult.csv",
             data=df,
         )
+        # Detect feature types for the dataset
         self.features = detect_feature_types(self.dataset)
+        # Corrected Feature instantiation
         self.pipeline = Pipeline(
             dataset=self.dataset,
             model=MultipleLinearRegression(),
             input_features=list(filter(lambda x: x.name != "age", self.features)),
-            target_feature=Feature(name="age", type="numerical"),
+            target_feature=Feature(name="age", feature_type="numeric", values=[]),  # Fixed argument
             metrics=[MeanSquaredError()],
             split=0.8
         )
+        # Store the dataset size
         self.ds_size = data.data.shape[0]
 
     def test_init(self):
@@ -56,7 +61,15 @@ class TestPipeline(unittest.TestCase):
         self.pipeline._preprocess_features()
         self.pipeline._split_data()
         self.pipeline._train()
-        self.pipeline._evaluate()
+        
+        # Use the train data for evaluation
+        train_X = self.pipeline._compact_vectors(self.pipeline._train_X)
+        train_y = self.pipeline._train_y
+        
+        # Pass the correct arguments to _evaluate
+        self.pipeline._evaluate(train_X, train_y)
+        
+        # Continue with your assertions
         self.assertIsNotNone(self.pipeline._predictions)
         self.assertIsNotNone(self.pipeline._metrics_results)
         self.assertEqual(len(self.pipeline._metrics_results), 1)

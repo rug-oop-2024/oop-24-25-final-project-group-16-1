@@ -3,9 +3,8 @@ from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
 import pandas as pd
 
-
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
-    """Assumption: only categorical, numerical (discrete), and continuous features.
+    """Detects feature types as either 'categorical', 'numerical', or 'continuous'.
     Args:
         dataset: Dataset
     Returns:
@@ -15,9 +14,9 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     df = dataset.read()
 
     for column in df.columns:
-        if isinstance(df[column].dtype, pd.Float64Dtype):
+        if pd.api.types.is_float_dtype(df[column]):
             feature_type = "continuous"
-        elif isinstance(df[column].dtype, pd.Int64Dtype):
+        elif pd.api.types.is_integer_dtype(df[column]):
             feature_type = "numerical"
         else:
             feature_type = "categorical"

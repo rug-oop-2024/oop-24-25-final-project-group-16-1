@@ -10,7 +10,7 @@ from autoop.functional.preprocessing import preprocess_features
 import numpy as np
 
 
-class Pipeline():
+class Pipeline:
     
     def __init__(self, 
                  metrics: List[Metric],
@@ -18,8 +18,7 @@ class Pipeline():
                  model: Model,
                  input_features: List[Feature],
                  target_feature: Feature,
-                 split=0.8,
-                 ):
+                 split=0.8):
         self._dataset = dataset
         self._model = model
         self._input_features = input_features
@@ -27,9 +26,11 @@ class Pipeline():
         self._metrics = metrics
         self._artifacts = {}
         self._split = split
-        if target_feature.type == "categorical" and model.type != "classification":
+        
+        # Validation checks
+        if target_feature.feature_type == "categorical" and model.type != "classification":
             raise ValueError("Model type must be classification for categorical target feature")
-        if target_feature.type == "continuous" and model.type != "regression":
+        if target_feature.feature_type == "continuous" and model.type != "regression":
             raise ValueError("Model type must be regression for continuous target feature")
 
     def __str__(self):
@@ -49,8 +50,7 @@ class Pipeline():
 
     @property
     def artifacts(self) -> List[Artifact]:
-        """Used to get the artifacts generated during the pipeline execution to be saved
-        """
+        """Used to get the artifacts generated during the pipeline execution to be saved"""
         artifacts = []
         for name, artifact in self._artifacts.items():
             artifact_type = artifact.get("type")
@@ -92,7 +92,10 @@ class Pipeline():
         self._train_y = self._output_vector[:int(split * len(self._output_vector))]
         self._test_y = self._output_vector[int(split * len(self._output_vector)):]
 
+        # Debug print statements removed for cleaner output
+
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
+        # Compact the feature vectors into a single matrix
         return np.concatenate(vectors, axis=1)
 
     def _train(self):
@@ -100,12 +103,16 @@ class Pipeline():
         Y = self._train_y
         self._model.fit(X, Y)
 
-    def _evaluate(self, X: np.array, Y: np.array) -> List[tuple]:
+    def _evaluate(self, X: np.ndarray, Y: np.ndarray) -> List[tuple]:
         predictions = self._model.predict(X)
+        self._predictions = predictions  # Store predictions in the _predictions attribute
+
         metrics_results = []
         for metric in self._metrics:
             result = metric.evaluate(predictions, Y)
             metrics_results.append((metric, result))
+        
+        self._metrics_results = metrics_results  # Store metric results
         return metrics_results, predictions
 
     def execute(self):
@@ -127,4 +134,5 @@ class Pipeline():
             "train_predictions": train_predictions,
             "test_predictions": test_predictions,
         }
+
     

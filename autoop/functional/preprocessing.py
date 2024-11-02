@@ -11,21 +11,25 @@ def preprocess_features(features: List[Feature], dataset: Dataset) -> List[Tuple
         features (List[Feature]): List of features.
         dataset (Dataset): Dataset object.
     Returns:
-        List[str, Tuple[np.ndarray, dict]]: List of preprocessed features. Each ndarray of shape (N, ...)
+        List[Tuple[str, np.ndarray, dict]]: List of preprocessed features. Each ndarray of shape (N, ...).
     """
     results = []
     raw = dataset.read()
+
     for feature in features:
-        if feature.type == "categorical":
+        if feature.feature_type == "categorical":
             encoder = OneHotEncoder()
             data = encoder.fit_transform(raw[feature.name].values.reshape(-1, 1)).toarray()
-            aritfact = {"type": "OneHotEncoder", "encoder": encoder.get_params()}
-            results.append((feature.name, data, aritfact))
-        if feature.type == "numerical":
+            artifact = {"type": "OneHotEncoder", "encoder": encoder.get_params()}
+            results.append((feature.name, data, artifact))
+        elif feature.feature_type in ["numeric", "numerical"]:  # Treat both as the same
             scaler = StandardScaler()
             data = scaler.fit_transform(raw[feature.name].values.reshape(-1, 1))
             artifact = {"type": "StandardScaler", "scaler": scaler.get_params()}
             results.append((feature.name, data, artifact))
+        else:
+            raise ValueError(f"Unsupported feature type: {feature.feature_type} for feature {feature.name}")
+
     # Sort for consistency
     results = list(sorted(results, key=lambda x: x[0]))
     return results

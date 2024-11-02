@@ -1,11 +1,11 @@
 import json
-from typing import Dict, Tuple, List, Union
+from typing import Tuple, List, Union
 
 from autoop.core.storage import Storage
 
 class Database():
 
-    def _init_(self, storage: Storage):
+    def __init__(self, storage: Storage):
         self._storage = storage
         self._data = {}
         self._load()
