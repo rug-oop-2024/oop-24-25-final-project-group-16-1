@@ -6,14 +6,14 @@ from copy import deepcopy
 
 
 class KNearestNeighbors(Model):
-    def __init__(self, name: str, k: int = 3, artifact_type: str = "model") -> None:
+    def __init__(self, name: str, k: int = 3, type: str = "model") -> None:
         """Initializes the KNearestNeighbors model.
         Args:
             name (str): The name of the model.
             k (int): The number of nearest neighbors to consider.
-            artifact_type (str): The type of artifact, defaults to "model".
+            type (str): The type of artifact, defaults to "model".
         """
-        super().__init__(name=name, artifact_type=artifact_type)
+        super().__init__(name=name, type=type)
         self.k = k
         self.observations = None
         self.ground_truth = None

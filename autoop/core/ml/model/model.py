@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 from autoop.core.ml.artifact import Artifact
 from typing import Any
 
+
 class Model(ABC, Artifact):
-    def __init__(self, name: str, artifact_type: str = "model"):
-        super().__init__(name=name, artifact_type=artifact_type)
+    def __init__(self, name: str, type: str = "model"):
+        super().__init__(name=name, type=type)
     
     @abstractmethod
     def train(self, x: Any, y: Any) -> None:

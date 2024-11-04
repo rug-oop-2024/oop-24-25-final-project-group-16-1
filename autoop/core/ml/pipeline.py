@@ -53,12 +53,12 @@ class Pipeline:
         """Used to get the artifacts generated during the pipeline execution to be saved"""
         artifacts = []
         for name, artifact in self._artifacts.items():
-            artifact_type = artifact.get("type")
-            if artifact_type in ["OneHotEncoder"]:
+            type = artifact.get("type")
+            if type in ["OneHotEncoder"]:
                 data = artifact["encoder"]
                 data = pickle.dumps(data)
                 artifacts.append(Artifact(name=name, data=data))
-            if artifact_type in ["StandardScaler"]:
+            if type in ["StandardScaler"]:
                 data = artifact["scaler"]
                 data = pickle.dumps(data)
                 artifacts.append(Artifact(name=name, data=data))

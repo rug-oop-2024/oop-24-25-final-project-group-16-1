@@ -5,7 +5,7 @@ from typing import Any
 
 class DecisionTreeModel(Model):
     def _init_(self, name: str, **kwargs):
-        super()._init_(name=name, artifact_type="DecisionTreeClassifier")
+        super()._init_(name=name, type="DecisionTreeClassifier")
         self.model = DecisionTreeClassifier(**kwargs)
 
     def train(self, x: Any, y: Any) -> None:
