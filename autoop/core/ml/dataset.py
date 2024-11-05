@@ -1,8 +1,10 @@
-from .artifact import Artifact
+import json
+import base64
+import os
 from typing import Optional, Dict, Any, List
 import pandas as pd
+from autoop.core.ml.artifact import Artifact
 import io
-
 
 class Dataset(Artifact):
     def __init__(
@@ -12,9 +14,9 @@ class Dataset(Artifact):
         metadata: Optional[Dict[str, Any]] = None,
         asset_path: str = "",
         description: str = " ",
-        version: str = "1.0",
+        version: str = "1.0.0",
         tags: Optional[List[str]] = None
-    ):
+    ) -> None:
         super().__init__(
             name=name,
             type="dataset",
@@ -32,13 +34,14 @@ class Dataset(Artifact):
         name: str,
         asset_path: str,
         description: str = " ",
-        version: str = "1.0",
+        version: str = "1.0.0",
         tags: Optional[List[str]] = None
     ) -> 'Dataset':
         csv_data = data.to_csv(index=False).encode()
+        base64_data = base64.b64encode(csv_data)
         return Dataset(
             name=name,
-            data=csv_data,
+            data=base64_data,
             asset_path=asset_path,
             metadata={'description': description},
             description=description,
@@ -46,31 +49,58 @@ class Dataset(Artifact):
             tags=tags
         )
 
+
     def read(self) -> pd.DataFrame:
         """
-        Reads the dataset data into a pandas DataFrame.
-
+        Reads the dataset either from in-memory data or from the specified asset path.
         Returns:
-            pd.DataFrame: The DataFrame representation of the dataset.
-
-        Raises:
-            ValueError: If no data is available to read.
+            pd.DataFrame: The dataset as a DataFrame.
         """
         if self.data:
-            csv_data = self.data.decode()
+            csv_data = base64.b64decode(self.data).decode()
             return pd.read_csv(io.StringIO(csv_data))
-        else:
-            csv_data = self.metadata.get('data')
-            if csv_data:
-                return pd.read_csv(io.StringIO(csv_data))
-            else:
-                raise ValueError("No data available to read.")
+
+        # Otherwise, read from asset_path
+        if not os.path.exists(self.asset_path):
+            raise FileNotFoundError(f"File not found: {self.asset_path}")
+            
+        with open(self.asset_path, 'r') as f:
+            data = json.load(f)
+            csv_data = base64.b64decode(data['data'])
+            return pd.read_csv(io.StringIO(csv_data.decode()))
+
 
     def save(self) -> None:
         """
-        Saves the dataset data and metadata.
+        Saves the dataset to a JSON file at the specified asset path.
+        The dataset is saved with its metadata and base64-encoded CSV data.
         """
-        if not self.data and 'data' in self.metadata:
-            self.data = self.metadata['data'].encode()
-        super().save()
+        os.makedirs(os.path.dirname(self.asset_path), exist_ok=True)
+        with open(self.asset_path, 'w') as f:
+            json.dump(self.toJSON(), f, indent=4)
 
+    def toJSON(self) -> Dict[str, Any]:
+        """
+        Converts the dataset to a dictionary for JSON serialization.
+        Returns:
+            Dict[str, Any]: The dataset as a dictionary.
+        """
+        artifact_dict = {
+            'name': self.name,
+            'type': self.type,
+            'metadata': self.metadata,
+            'asset_path': self.asset_path,
+            'version': self.version,
+            'tags': self.tags,
+            'id': self.id
+        }
+        if self.data:
+            artifact_dict['data'] = base64.b64encode(self.data).decode('utf-8')
+        return artifact_dict
+
+    def __repr__(self) -> str:
+        return (f"Dataset(name={self.name}, "
+                f"description={self.description}, "
+                f"version={self.version}, "
+                f"tags={self.tags}, "
+                f"id={self.id})")
