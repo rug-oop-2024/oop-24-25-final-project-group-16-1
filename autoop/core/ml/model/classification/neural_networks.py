@@ -31,9 +31,13 @@ class NeuralNetwork(Model):
         self._learning_rate: float = learning_rate
         self._num_iterations: int = num_iterations
 
-        self._W1: np.ndarray = np.random.randn(self._input_size, self._hidden_size)
+        self._W1: np.ndarray = np.random.randn(
+            self._input_size, self._hidden_size
+        )
         self._b1: np.ndarray = np.zeros((1, self._hidden_size))
-        self._W2: np.ndarray = np.random.randn(self._hidden_size, self._output_size)
+        self._W2: np.ndarray = np.random.randn(
+            self._hidden_size, self._output_size
+        )
         self._b2: np.ndarray = np.zeros((1, self._output_size))
 
     @property
@@ -138,7 +142,9 @@ class NeuralNetwork(Model):
             z2 = np.dot(a1, self._W2) + self._b2
             a2 = self.sigmoid(z2)
 
-            loss = -np.mean(y * np.log(a2 + 1e-10) + (1 - y) * np.log(1 - a2 + 1e-10))
+            loss = -np.mean(
+                y * np.log(a2 + 1e-10) + (1 - y) * np.log(1 - a2 + 1e-10)
+            )
 
             dz2 = a2 - y
             dW2 = np.dot(a1.T, dz2)

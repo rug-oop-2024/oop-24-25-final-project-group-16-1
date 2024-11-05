@@ -13,7 +13,8 @@ def preprocess_features(
         features (List[Feature]): List of features.
         dataset (Dataset): Dataset object.
     Returns:
-        List[Tuple[str, np.ndarray, dict]]: List of preprocessed features. Each ndarray of shape (N, ...).
+        List[Tuple[str, np.ndarray, dict]]: List of preprocessed features.
+        Each ndarray of shape (N, ...).
     """
     results = []
     raw = dataset.read()
@@ -24,16 +25,25 @@ def preprocess_features(
             data = encoder.fit_transform(
                 raw[feature.name].values.reshape(-1, 1)
             ).toarray()
-            artifact = {"type": "OneHotEncoder", "encoder": encoder.get_params()}
+            artifact = {
+                "type": "OneHotEncoder", "encoder": encoder.get_params()
+            }
             results.append((feature.name, data, artifact))
-        elif feature.feature_type in ["numeric", "numerical"]:  # Treat both as the same
+        elif feature.feature_type in ["numeric", "numerical"]:
             scaler = StandardScaler()
-            data = scaler.fit_transform(raw[feature.name].values.reshape(-1, 1))
-            artifact = {"type": "StandardScaler", "scaler": scaler.get_params()}
+            data = scaler.fit_transform(
+                raw[feature.name].values.reshape(-1, 1)
+            )
+            artifact = {
+                "type": "StandardScaler", "scaler": scaler.get_params()
+            }
             results.append((feature.name, data, artifact))
         else:
             raise ValueError(
-                f"Unsupported feature type: {feature.feature_type} for feature {feature.name}"
+                f"""
+                Unsupported feature type:
+                {feature.feature_type} for feature {feature.name}
+            """
             )
 
     # Sort for consistency

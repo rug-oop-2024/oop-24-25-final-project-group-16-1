@@ -31,7 +31,9 @@ class TestPipeline(unittest.TestCase):
         self.pipeline = Pipeline(
             dataset=self.dataset,
             model=MultipleLinearRegression(),
-            input_features=list(filter(lambda x: x.name != "age", self.features)),
+            input_features=list(
+                filter(lambda x: x.name != "age", self.features)
+            ),
             target_feature=Feature(
                 name="age", feature_type="numeric", values=[]
             ),  # Fixed argument
@@ -51,9 +53,12 @@ class TestPipeline(unittest.TestCase):
     def test_split_data(self):
         self.pipeline._preprocess_features()
         self.pipeline._split_data()
-        self.assertEqual(self.pipeline._train_X[0].shape[0], int(0.8 * self.ds_size))
         self.assertEqual(
-            self.pipeline._test_X[0].shape[0], self.ds_size - int(0.8 * self.ds_size)
+            self.pipeline._train_X[0].shape[0], int(0.8 * self.ds_size)
+        )
+        self.assertEqual(
+            self.pipeline._test_X[0].shape[0],
+            self.ds_size - int(0.8 * self.ds_size)
         )
 
     def test_train(self):
@@ -67,14 +72,11 @@ class TestPipeline(unittest.TestCase):
         self.pipeline._split_data()
         self.pipeline._train()
 
-        # Use the train data for evaluation
         train_X = self.pipeline._compact_vectors(self.pipeline._train_X)
         train_y = self.pipeline._train_y
 
-        # Pass the correct arguments to _evaluate
         self.pipeline._evaluate(train_X, train_y)
 
-        # Continue with your assertions
         self.assertIsNotNone(self.pipeline._predictions)
         self.assertIsNotNone(self.pipeline._metrics_results)
         self.assertEqual(len(self.pipeline._metrics_results), 1)

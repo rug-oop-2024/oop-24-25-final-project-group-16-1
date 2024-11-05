@@ -31,7 +31,8 @@ class Dataset(Artifact):
 
     def read(self) -> pd.DataFrame:
         """
-        Reads the dataset either from in-memory data or from the specified asset path.
+        Reads the dataset either from in-memory data or
+        from the specified asset path.
         Returns:
             pd.DataFrame: The dataset as a DataFrame.
         """

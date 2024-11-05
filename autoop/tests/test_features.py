@@ -67,9 +67,13 @@ class TestFeatures(unittest.TestCase):
         for feature in features:
             self.assertIsInstance(feature, Feature)
             self.assertEqual(feature.name in data.feature_names, True)
-        for detected_feature in filter(lambda x: x.name in numerical_columns, features):
+        for detected_feature in filter(
+            lambda x: x.name in numerical_columns, features
+        ):
             # Allow both numerical and continuous
-            self.assertIn(detected_feature.feature_type, ["numerical", "continuous"])
+            self.assertIn(
+                detected_feature.feature_type, ["numerical", "continuous"]
+            )
         for detected_feature in filter(
             lambda x: x.name in categorical_columns, features
         ):

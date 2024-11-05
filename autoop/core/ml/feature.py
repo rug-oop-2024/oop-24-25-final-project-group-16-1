@@ -63,7 +63,7 @@ class Feature:
         """
         if value not in {"numeric", "categorical", "continuous"}:
             raise ValueError(
-                "Feature type must be 'numeric', 'categorical', or 'continuous'."
+                "Feature type must be 'numeric','categorical', or 'continuous'"
             )
         self._feature_type = value
 
@@ -102,7 +102,7 @@ class Feature:
                 "max": float(np.max(self._values)),
             }
         raise ValueError(
-            "Statistics can only be computed for numeric or continuous features."
+            "Statistics can only be computed 4 numeric or continuous features."
         )
 
     def __str__(self) -> str:

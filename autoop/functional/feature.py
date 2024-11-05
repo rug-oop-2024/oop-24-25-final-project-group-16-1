@@ -5,7 +5,8 @@ import pandas as pd
 
 
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
-    """Detects feature types as either 'categorical', 'numerical', or 'continuous'.
+    """Detects feature types as either
+    'categorical', 'numerical', or 'continuous'.
     Args:
         dataset: Dataset
     Returns:

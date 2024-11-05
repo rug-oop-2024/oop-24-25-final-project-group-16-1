@@ -56,7 +56,9 @@ class Accuracy(Metric):
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         if len(y_true) != len(y_pred):
-            raise ValueError("Length of true labels and predicted labels must match.")
+            raise ValueError(
+                "Length of true labels and predicted labels must match."
+            )
         correct = sum(yt == yp for yt, yp in zip(y_true, y_pred))
         if len(y_true) > 0:
             return correct / len(y_true)
@@ -70,7 +72,9 @@ class MeanSquaredError(Metric):
         y_true = np.array(y_true).flatten()
         y_pred = np.array(y_pred).flatten()
         if len(y_true) != len(y_pred):
-            raise ValueError("Length of true labels and predicted labels must match.")
+            raise ValueError(
+                "Length of true labels and predicted labels must match."
+            )
         return np.mean((np.array(y_true) - np.array(y_pred)) ** 2)
 
 
@@ -79,7 +83,9 @@ class MeanAbsoluteError(Metric):
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
         if len(y_true) != len(y_pred):
-            raise ValueError("Length of true labels and predicted labels must match.")
+            raise ValueError(
+                "Length of true labels and predicted labels must match."
+            )
         return np.mean(np.abs(np.array(y_true) - np.array(y_pred)))
 
 
@@ -88,7 +94,9 @@ class R2Score(Metric):
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
         if len(y_true) != len(y_pred):
-            raise ValueError("Length of true labels and predicted labels must match.")
+            raise ValueError(
+                "Length of true labels and predicted labels must match."
+            )
         ss_total = np.sum((np.array(y_true) - np.mean(y_true)) ** 2)
         ss_residual = np.sum((np.array(y_true) - np.array(y_pred)) ** 2)
         if ss_total > 0:
@@ -101,8 +109,12 @@ class Precision(Metric):
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         if len(y_true) != len(y_pred):
-            raise ValueError("Length of true labels and predicted labels must match.")
-        true_positive = sum(1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1)
+            raise ValueError(
+                "Length of true labels and predicted labels must match."
+            )
+        true_positive = sum(
+            1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1
+        )
         predicted_positive = sum(1 for yp in y_pred if yp == 1)
         if predicted_positive > 0:
             return true_positive / predicted_positive
@@ -114,8 +126,12 @@ class Recall(Metric):
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         if len(y_true) != len(y_pred):
-            raise ValueError("Length of true labels and predicted labels must match.")
-        true_positive = sum(1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1)
+            raise ValueError(
+                "Length of true labels and predicted labels must match."
+            )
+        true_positive = sum(
+            1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1
+        )
         actual_positive = sum(1 for yt in y_true if yt == 1)
         if actual_positive > 0:
             return true_positive / actual_positive

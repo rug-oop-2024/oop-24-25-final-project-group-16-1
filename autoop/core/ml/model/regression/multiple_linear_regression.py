@@ -1,5 +1,7 @@
 from autoop.core.ml.model.model import Model
-from autoop.core.ml.model.regression.linear_regression import LinearRegressionModel
+from autoop.core.ml.model.regression.linear_regression import (
+    LinearRegressionModel
+)
 import numpy as np
 from copy import deepcopy
 

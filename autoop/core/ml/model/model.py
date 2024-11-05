@@ -4,7 +4,7 @@ from typing import Any
 
 
 class Model(ABC, Artifact):
-    def __init__(self, name: str, type: str = "model"):
+    def __init__(self, name: str, type: str):
         super().__init__(name=name, type=type)
 
     @abstractmethod

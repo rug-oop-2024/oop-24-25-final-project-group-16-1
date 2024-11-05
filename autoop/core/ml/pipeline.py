@@ -35,9 +35,12 @@ class Pipeline:
             and model.type != "classification"
         ):
             raise ValueError(
-                "Model type must be classification for categorical target feature"
+                "Model type must be classif. 4 categorical target feature"
             )
-        if target_feature.feature_type == "continuous" and model.type != "regression":
+        if (
+            target_feature.feature_type == "continuous"
+            and model.type != "regression"
+        ):
             raise ValueError(
                 "Model type must be regression for continuous target feature"
             )
@@ -59,7 +62,10 @@ class Pipeline:
 
     @property
     def artifacts(self) -> List[Artifact]:
-        """Used to get the artifacts generated during the pipeline execution to be saved"""
+        """
+        Used to get the artifacts generated during
+        the pipeline execution to be saved
+        """
         artifacts = []
         for name, artifact in self._artifacts.items():
             type = artifact.get("type")
@@ -92,29 +98,34 @@ class Pipeline:
             [self._target_feature], self._dataset
         )[0]
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(self._input_features, self._dataset)
+        input_results = preprocess_features(
+            self._input_features, self._dataset
+        )
         for feature_name, data, artifact in input_results:
             self._register_artifact(feature_name, artifact)
-        # Get the input vectors and output vector, sort by feature name for consistency
         self._output_vector = target_data
-        self._input_vectors = [data for (feature_name, data, artifact) in input_results]
+        self._input_vectors = [
+            data for (feature_name, data, artifact) in input_results
+        ]
 
     def _split_data(self):
-        # Split the data into training and testing sets
         split = self._split
         self._train_X = [
-            vector[: int(split * len(vector))] for vector in self._input_vectors
+            vector[
+                : int(split * len(vector))] for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[int(split * len(vector)) :] for vector in self._input_vectors
+            vector[
+                int(split * len(vector)):] for vector in self._input_vectors
         ]
-        self._train_y = self._output_vector[: int(split * len(self._output_vector))]
-        self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
-
-        # Debug print statements removed for cleaner output
+        self._train_y = self._output_vector[
+            : int(split * len(self._output_vector))
+        ]
+        self._test_y = self._output_vector[
+            int(split * len(self._output_vector)):
+            ]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
-        # Compact the feature vectors into a single matrix
         return np.concatenate(vectors, axis=1)
 
     def _train(self):
@@ -125,7 +136,7 @@ class Pipeline:
     def _evaluate(self, X: np.ndarray, Y: np.ndarray) -> List[tuple]:
         predictions = self._model.predict(X)
         self._predictions = (
-            predictions  # Store predictions in the _predictions attribute
+            predictions
         )
 
         metrics_results = []
@@ -133,7 +144,7 @@ class Pipeline:
             result = metric.evaluate(predictions, Y)
             metrics_results.append((metric, result))
 
-        self._metrics_results = metrics_results  # Store metric results
+        self._metrics_results = metrics_results
         return metrics_results, predictions
 
     def execute(self):
@@ -143,7 +154,9 @@ class Pipeline:
         self._train()
         train_X = self._compact_vectors(self._train_X)
         train_y = self._train_y
-        train_metrics_results, train_predictions = self._evaluate(train_X, train_y)
+        train_metrics_results, train_predictions = self._evaluate(
+            train_X, train_y
+        )
 
         test_X = self._compact_vectors(self._test_X)
         test_y = self._test_y

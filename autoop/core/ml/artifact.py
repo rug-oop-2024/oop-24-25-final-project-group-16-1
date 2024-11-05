@@ -20,11 +20,14 @@ class Artifact:
         Args:
             name (str): The name of the artifact.
             type (str): The type of the artifact (e.g., 'model', 'dataset').
-            metadata (Optional[Dict[str, Any]]): Additional metadata about the artifact.
-            data (Optional[bytes]): The binary data associated with the artifact.
+            metadata (Optional[Dict[str, Any]]):
+            Additional metadata about the artifact.
+            data (Optional[bytes]):
+            The binary data associated with the artifact.
             asset_path (str): The path where the artifact's data is stored.
             version (str): The version of the artifact.
-            tags (Optional[List[str]]): A list of tags associated with the artifact.
+            tags (Optional[List[str]]):
+            A list of tags associated with the artifact.
         """
         self.name = name
         self.type = type
@@ -37,7 +40,8 @@ class Artifact:
 
     def read(self) -> pd.DataFrame:
         """
-        Reads the dataset either from in-memory data or from the specified asset path.
+        Reads the dataset either from in-memory data or
+        from the specified asset path.
         Returns:
             pd.DataFrame: The dataset as a DataFrame.
         """

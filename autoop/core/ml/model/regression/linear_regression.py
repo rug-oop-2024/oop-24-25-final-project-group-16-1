@@ -5,14 +5,19 @@ from autoop.core.ml.model.model import Model
 
 
 class LinearRegressionModel(Model):
-    def _init_(self, learning_rate: float = 0.01, num_iterations: int = 10) -> None:
+    def __init__(
+            self, learning_rate: float = 0.01, num_iterations: int = 10
+    ) -> None:
         """
-        Initializes the LinearRegressionModel with specified learning rate and iteration count.
+        Initializes the LinearRegressionModel with specified
+        learning rate and iteration count.
         Args:
-            learning_rate (float): The learning rate for gradient descent updates.
-            num_iterations (int): The number of iterations for gradient descent.
+            learning_rate (float): The learning rate for gradient descent
+            updates.
+            num_iterations (int): The number of iterations
+            for gradient descent.
         """
-        super()._init_(name="LinearRegressionModel")
+        super().__init__(name="LinearRegressionModel")
         self._learning_rate: float = learning_rate
         self._num_iterations: int = num_iterations
         self._weights: Optional[np.ndarray] = None
@@ -51,7 +56,8 @@ class LinearRegressionModel(Model):
     @num_iterations.setter
     def num_iterations(self, iterations: int) -> None:
         """
-        Sets the number of training iterations, ensuring it is a positive integer.
+        Sets the number of training iterations,
+        ensuring it is a positive integer.
         Args:
             iterations (int): The new iteration count.
         Raises:
@@ -66,7 +72,8 @@ class LinearRegressionModel(Model):
         """
         Returns the model's learned weights.
         Returns:
-            Optional[np.ndarray]: The weights if the model is trained, else None.
+            Optional[np.ndarray]: The weights if the model is trained,
+            else None.
         Raises:
             ValueError: If accessed before the model is trained.
         """
@@ -80,7 +87,8 @@ class LinearRegressionModel(Model):
         """
         Trains the linear regression model using gradient descent.
         Args:
-            X (np.ndarray): Input feature matrix of shape (num_samples, num_features).
+            X (np.ndarray): Input feature matrix of shape
+            (num_samples, num_features).
             y (np.ndarray): Target values of shape (num_samples,).
         Notes:
             Updates the model's weights using gradient descent.
@@ -95,9 +103,9 @@ class LinearRegressionModel(Model):
 
             dw = (1 / num_samples) * np.dot(X.T, (y_pred - y))
 
-            assert (
-                dw.shape == self._weights.shape
-            ), f"dw shape {dw.shape} does not match weights shape {self._weights.shape}"
+            assert dw.shape == self._weights.shape, (
+                f"dw shape {dw.shape} not match weights {self._weights.shape}"
+            )
 
             self._weights -= self._learning_rate * dw
 
@@ -105,12 +113,16 @@ class LinearRegressionModel(Model):
         """
         Predicts target values for the given input features.
         Args:
-            X (np.ndarray): Input feature matrix of shape (num_samples, num_features).
+            X (np.ndarray): Input feature matrix of shape
+            (num_samples, num_features).
         Returns:
             np.ndarray: Predicted values of shape (num_samples,).
         Raises:
-            ValueError: If the model has not been trained (i.e., weights are None).
+            ValueError: If the model has not been trained
+            (i.e., weights are None).
         """
         if self._weights is None:
-            raise ValueError("Model is not trained yet. Call fit to train the model.")
+            raise ValueError(
+                "Model is not trained yet. Call fit to train the model."
+            )
         return np.dot(X, self._weights)
