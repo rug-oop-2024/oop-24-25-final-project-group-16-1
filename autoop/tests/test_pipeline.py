@@ -9,6 +9,7 @@ from autoop.functional.feature import detect_feature_types
 from autoop.core.ml.model.regression import MultipleLinearRegression
 from autoop.core.ml.metric import MeanSquaredError
 
+
 class TestPipeline(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -31,9 +32,11 @@ class TestPipeline(unittest.TestCase):
             dataset=self.dataset,
             model=MultipleLinearRegression(),
             input_features=list(filter(lambda x: x.name != "age", self.features)),
-            target_feature=Feature(name="age", feature_type="numeric", values=[]),  # Fixed argument
+            target_feature=Feature(
+                name="age", feature_type="numeric", values=[]
+            ),  # Fixed argument
             metrics=[MeanSquaredError()],
-            split=0.8
+            split=0.8,
         )
         # Store the dataset size
         self.ds_size = data.data.shape[0]
@@ -49,7 +52,9 @@ class TestPipeline(unittest.TestCase):
         self.pipeline._preprocess_features()
         self.pipeline._split_data()
         self.assertEqual(self.pipeline._train_X[0].shape[0], int(0.8 * self.ds_size))
-        self.assertEqual(self.pipeline._test_X[0].shape[0], self.ds_size - int(0.8 * self.ds_size))
+        self.assertEqual(
+            self.pipeline._test_X[0].shape[0], self.ds_size - int(0.8 * self.ds_size)
+        )
 
     def test_train(self):
         self.pipeline._preprocess_features()
@@ -61,14 +66,14 @@ class TestPipeline(unittest.TestCase):
         self.pipeline._preprocess_features()
         self.pipeline._split_data()
         self.pipeline._train()
-        
+
         # Use the train data for evaluation
         train_X = self.pipeline._compact_vectors(self.pipeline._train_X)
         train_y = self.pipeline._train_y
-        
+
         # Pass the correct arguments to _evaluate
         self.pipeline._evaluate(train_X, train_y)
-        
+
         # Continue with your assertions
         self.assertIsNotNone(self.pipeline._predictions)
         self.assertIsNotNone(self.pipeline._metrics_results)

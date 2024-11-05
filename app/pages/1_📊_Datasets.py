@@ -13,21 +13,15 @@ if datasets:
     st.subheader("Available Datasets")
 
     dataset_names = [dataset.name for dataset in datasets]
-    selected_name = st.selectbox(
-        "Select a dataset to view or delete:",
-        dataset_names
-    )
-
+    selected_name = st.selectbox("Select a dataset to view or delete:", dataset_names)
+    selected = next(dataset for dataset in datasets if dataset.name == selected_name)
     if st.button("View Dataset"):
-        selected = next(
-            dataset for dataset in datasets if dataset.name == selected_name
-        )
-        data = selected.load()
+        data = selected.read()
         st.write(f"### Dataset: {selected.name}")
-        st.dataframe(selected.data)
+        st.dataframe(data)
 
     if st.button("Delete Dataset"):
-        automl.registry.delete(selected_name)
+        automl.registry.delete(selected)
         st.success(f"Dataset '{selected_name}' deleted successfully.")
         st.rerun()
 

@@ -1,14 +1,17 @@
 import numpy as np
 from autoop.core.ml.model.model import Model
 
+
 class NeuralNetwork(Model):
-    def __init__(self, 
-                 name: str,
-                 input_size: int, 
-                 hidden_size: int, 
-                 output_size: int, 
-                 learning_rate: float = 0.01, 
-                 num_iterations: int = 10):
+    def __init__(
+        self,
+        name: str,
+        input_size: int,
+        hidden_size: int,
+        output_size: int,
+        learning_rate: float = 0.01,
+        num_iterations: int = 10,
+    ):
         """
         Initializes the Neural Network with given architecture and parameters.
         Args:
@@ -16,8 +19,10 @@ class NeuralNetwork(Model):
             input_size (int): The number of input features.
             hidden_size (int): The number of neurons in the hidden layer.
             output_size (int): The number of output classes.
-            learning_rate (float, optional): The learning rate for weight updates. Defaults to 0.01.
-            num_iterations (int, optional): The number of iterations for training. Defaults to 10000.
+            learning_rate (float, optional): Learning rate for weight updates.
+                                             Defaults to 0.01.
+            num_iterations (int, optional): Number of iterations for training.
+                                             Defaults to 10000.
         """
         super()._init_(name=name)
         self._input_size: int = input_size
@@ -38,7 +43,9 @@ class NeuralNetwork(Model):
 
     @input_size.setter
     def input_size(self, size: int) -> None:
-        """Set the number of input features, updates weights and resets biases."""
+        """
+        Set the number of input features, updates weights and resets biases.
+        """
         self._input_size = size
         self._W1 = np.random.randn(self._input_size, self._hidden_size)
         self._b1 = np.zeros((1, self._hidden_size))
@@ -50,7 +57,10 @@ class NeuralNetwork(Model):
 
     @hidden_size.setter
     def hidden_size(self, size: int) -> None:
-        """Set the number of neurons in the hidden layer, updates weights and resets biases."""
+        """
+        Set the number of neurons in the hidden layer,
+        updates weights and resets biases.
+        """
         self._hidden_size = size
         self._W1 = np.random.randn(self._input_size, self._hidden_size)
         self._b1 = np.zeros((1, self._hidden_size))
@@ -64,7 +74,10 @@ class NeuralNetwork(Model):
 
     @output_size.setter
     def output_size(self, size: int) -> None:
-        """Set the number of output classes, updates weights and resets biases."""
+        """
+        Set the number of output classes,
+        updates weights and resets biases.
+        """
         self._output_size = size
         self._W2 = np.random.randn(self._hidden_size, self._output_size)
         self._b2 = np.zeros((1, self._output_size))
@@ -107,12 +120,12 @@ class NeuralNetwork(Model):
             z (np.ndarray): Output values of the sigmoid function.
         Returns:
             np.ndarray: The derivative of the sigmoid function evaluated at z,
-                        which represents the slope of the sigmoid curve at each point.
+                        which represents the slope of the sigmoid curve at
+                        each point.
         """
         return z * (1 - z)
 
-
-    def train(self, X: np.ndarray, y: np.ndarray) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Train the neural network using the provided training data.
         Args:
@@ -157,24 +170,3 @@ class NeuralNetwork(Model):
         a2 = self.sigmoid(z2)
         predictions = [1 if i > 0.5 else 0 for i in a2]
         return np.array(predictions)
-
-    def evaluate(self, X: np.ndarray, y: np.ndarray) -> float:
-        """
-        Evaluate the model performance on test data.
-        Args:
-            X (np.ndarray): The input feature matrix.
-            y (np.ndarray): The true target values.
-        Returns:
-            float: The accuracy of the model on the test data.
-        """
-        predictions = self.predict(X)
-        accuracy = np.mean(predictions == y)
-        return accuracy
-    
-    def save(self) -> None:
-        """Saves the model state."""
-        super().save()
-
-    def load(self, name: str) -> None:
-        """Loads the model state."""
-        super().load(name)

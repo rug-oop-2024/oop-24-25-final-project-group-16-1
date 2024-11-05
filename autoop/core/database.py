@@ -1,9 +1,11 @@
 import json
 from typing import Tuple, List, Union
+import os
 
 from autoop.core.storage import Storage
 
-class Database():
+
+class Database:
 
     def __init__(self, storage: Storage):
         self._storage = storage
@@ -39,7 +41,7 @@ class Database():
         if not self._data.get(collection, None):
             return None
         return self._data[collection].get(id, None)
-    
+
     def delete(self, collection: str, id: str):
         """Delete a key from the database
         Args:
@@ -75,27 +77,23 @@ class Database():
             if not data:
                 continue
             for id, item in data.items():
-                self._storage.save(json.dumps(item).encode(), f"{collection}/{id}")
+                self._storage.save(
+                    json.dumps(item).encode(), f"{collection}{os.sep}{id}"
+                )
 
         # for things that were deleted, we need to remove them from the storage
         keys = self._storage.list("")
         for key in keys:
-            parts = key.split("/")
-            if len(parts) < 2:
-                continue
-            collection, id = parts[-2:]
+            collection, id = key.split(os.sep)[-2:]
             if not self._data.get(collection, id):
-                self._storage.delete(f"{collection}/{id}")
-    
+                self._storage.delete(f"{collection}{os.sep}{id}")
+
     def _load(self):
         """Load the data from storage"""
         self._data = {}
         for key in self._storage.list(""):
-            parts = key.split("/")
-            if len(parts) < 2:
-                continue
-            collection, id = parts[-2:]
-            data = self._storage.load(f"{collection}/{id}")
+            collection, id = key.split(os.sep)[-2:]
+            data = self._storage.load(f"{collection}{os.sep}{id}")
             # Ensure the collection exists in the dictionary
             if collection not in self._data:
                 self._data[collection] = {}

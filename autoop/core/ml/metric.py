@@ -12,7 +12,7 @@ METRICS = [
 ]
 
 
-def get_metric(name: str) -> Type['Metric']:
+def get_metric(name: str) -> Type["Metric"]:
     """Factory function to get a metric by name.
     Args:
         name (str): The name of the metric.
@@ -38,7 +38,7 @@ def get_metric(name: str) -> Type['Metric']:
 
 class Metric(ABC):
     """Base class for all metrics."""
-    
+
     @abstractmethod
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         """Calculates the metric based on true and predicted values.
@@ -53,7 +53,7 @@ class Metric(ABC):
 
 class Accuracy(Metric):
     """Accuracy metric implementation."""
-    
+
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         if len(y_true) != len(y_pred):
             raise ValueError("Length of true labels and predicted labels must match.")
@@ -65,8 +65,10 @@ class Accuracy(Metric):
 
 class MeanSquaredError(Metric):
     """Mean Squared Error metric implementation."""
-    
+
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
+        y_true = np.array(y_true).flatten()
+        y_pred = np.array(y_pred).flatten()
         if len(y_true) != len(y_pred):
             raise ValueError("Length of true labels and predicted labels must match.")
         return np.mean((np.array(y_true) - np.array(y_pred)) ** 2)
@@ -74,7 +76,7 @@ class MeanSquaredError(Metric):
 
 class MeanAbsoluteError(Metric):
     """Mean Absolute Error metric implementation."""
-    
+
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
         if len(y_true) != len(y_pred):
             raise ValueError("Length of true labels and predicted labels must match.")
@@ -83,7 +85,7 @@ class MeanAbsoluteError(Metric):
 
 class R2Score(Metric):
     """R-squared score metric implementation."""
-    
+
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
         if len(y_true) != len(y_pred):
             raise ValueError("Length of true labels and predicted labels must match.")
@@ -96,7 +98,7 @@ class R2Score(Metric):
 
 class Precision(Metric):
     """Precision metric implementation."""
-    
+
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         if len(y_true) != len(y_pred):
             raise ValueError("Length of true labels and predicted labels must match.")
@@ -109,7 +111,7 @@ class Precision(Metric):
 
 class Recall(Metric):
     """Recall metric implementation."""
-    
+
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         if len(y_true) != len(y_pred):
             raise ValueError("Length of true labels and predicted labels must match.")
@@ -118,4 +120,3 @@ class Recall(Metric):
         if actual_positive > 0:
             return true_positive / actual_positive
         return 0.0
-

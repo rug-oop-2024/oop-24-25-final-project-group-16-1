@@ -36,23 +36,21 @@ class KNearestNeighbors(Model):
             raise ValueError("Parameters should be provided as a dictionary.")
         self._parameters = value
 
-    def train(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
+    def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
         """Trains the model with the provided observations and ground truth.
         Args:
             observations (np.ndarray): The input features.
-            ground_truth (np.ndarray): The true labels corresponding to the observations.
+            ground_truth (np.ndarray): The true labels corresponding
+                                       to the observations.
         """
         self.observations = observations
         self.ground_truth = ground_truth
-        self._parameters = {
-            "observations": observations,
-            "ground_truth": ground_truth
-        }
+        self._parameters = {"observations": observations, "ground_truth": ground_truth}
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts labels for the given observations.
         Args:
-            observations (np.ndarray): The input features for which to predict labels.
+            observations (np.ndarray): The input features.
         Returns:
             np.ndarray: The predicted labels.
         """
@@ -68,27 +66,7 @@ class KNearestNeighbors(Model):
         """
         module = observation - self._parameters["observations"]
         distances = np.linalg.norm(module, axis=1)
-        k_indices = np.argsort(distances)[:self.k]
+        k_indices = np.argsort(distances)[: self.k]
         k_nearest_labels = [self._parameters["ground_truth"][i] for i in k_indices]
         most_common = pd.Series(k_nearest_labels).value_counts()
         return most_common.index[0]
-    
-    def evaluate(self, x: np.ndarray, y: np.ndarray) -> float:
-        """Evaluates the model performance on test data.
-        Args:
-            x (np.ndarray): Test input features.
-            y (np.ndarray): True labels for the test features.
-        Returns:
-            float: The accuracy of the model on the test data.
-        """
-        predictions = self.predict(x)
-        accuracy = np.mean(predictions == y)
-        return accuracy
-
-    def save(self) -> None:
-        """Saves the model state."""
-        super().save()
-
-    def load(self, name: str) -> None:
-        """Loads the model state."""
-        super().load(name)

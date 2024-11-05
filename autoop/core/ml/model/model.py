@@ -6,9 +6,9 @@ from typing import Any
 class Model(ABC, Artifact):
     def __init__(self, name: str, type: str = "model"):
         super().__init__(name=name, type=type)
-    
+
     @abstractmethod
-    def train(self, x: Any, y: Any) -> None:
+    def fit(self, x: Any, y: Any) -> None:
         """Train the model with input features x and target labels y."""
         pass
 
@@ -16,17 +16,3 @@ class Model(ABC, Artifact):
     def predict(self, x: Any) -> Any:
         """Predict labels or values given input features x."""
         pass
-
-    @abstractmethod
-    def evaluate(self, x: Any, y: Any) -> float:
-        """Evaluate the model performance on test data."""
-        pass
-
-    def save(self) -> None:
-        """Save model state."""
-        super().save()
-
-    def load(self, name: str) -> None:
-        """Load model state."""
-        super().load(name)
-

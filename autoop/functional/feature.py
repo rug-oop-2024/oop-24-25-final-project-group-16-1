@@ -3,6 +3,7 @@ from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
 import pandas as pd
 
+
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
     """Detects feature types as either 'categorical', 'numerical', or 'continuous'.
     Args:

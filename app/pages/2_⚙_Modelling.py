@@ -7,7 +7,7 @@ st.set_page_config(page_title="Modelling", page_icon="📈")
 
 
 def write_helper_text(text: str):
-    st.write(f"<p style=\"color: #888;\">{text}</p>", unsafe_allow_html=True)
+    st.write(f'<p style="color: #888;">{text}</p>', unsafe_allow_html=True)
 
 
 st.write("# ⚙ Modelling")
@@ -26,18 +26,11 @@ write_helper_text(
 )
 
 if datasets:
-    data = [
-        {
-            "Name": dataset.name,
-            "Description": dataset.description,
-            "Date Added": dataset.date_added,
-        }
-        for dataset in datasets
-    ]
+    data = [dataset.name for dataset in datasets]
     df = pd.DataFrame(data)
-
-    selected_dataset_name = st.selectbox(
-        "Available Datasets", df["Name"].values
+    selected_dataset_name = st.selectbox("Select a dataset to view or delete:", data)
+    selected = next(
+        dataset for dataset in datasets if dataset.name == selected_dataset_name
     )
 
     if selected_dataset_name:
@@ -46,9 +39,8 @@ if datasets:
         )
         if selected_dataset:
             st.write(f"### Dataset: {selected_dataset.name}")
-            st.write(f"Description: {selected_dataset.description}")
-            st.write(f"Date Added: {selected_dataset.date_added}")
-            st.dataframe(selected_dataset.data.head(100))
+            dataset_df = selected_dataset.read()
+            st.dataframe(dataset_df.head(100))
 
             features = detect_feature_types(selected_dataset)
             feature_names = [feature.name for feature in features]
@@ -60,36 +52,34 @@ if datasets:
             )
 
             input_features = st.multiselect(
-                "Select Input Features",
-                feature_names,
-                default=feature_names[:-1]
+                "Select Input Features", feature_names, default=feature_names[:-1]
             )
             target_feature = st.selectbox(
-                "Select Target Feature",
-                feature_names,
-                index=len(feature_names) - 1
+                "Select Target Feature", feature_names, index=len(feature_names) - 1
             )
 
             target_feature_type = next(
-                (f.feature_type for f in features if f.name == target_feature),
-                None
+                (f.feature_type for f in features if f.name == target_feature), None
             )
             if target_feature_type == "categorical":
                 task_type = "Classification"
                 available_models = [
                     "Decision Tree Model",
                     "K Nearest Neighbors",
-                    "Neural Networks"
+                    "Neural Networks",
                 ]
                 available_metrics = ["Accuracy", "Precision", "Recall"]
             elif target_feature_type in {"numerical", "continuous"}:
                 task_type = "Regression"
                 available_models = [
-                    "Linear Regression", "Lasso Regression",
-                    "Multiple Linear Regression"
+                    "Linear Regression",
+                    "Lasso Regression",
+                    "Multiple Linear Regression",
                 ]
                 available_metrics = [
-                    "Mean Squared Error", "Mean Absolute Error", "R2 Score"
+                    "Mean Squared Error",
+                    "Mean Absolute Error",
+                    "R2 Score",
                 ]
             else:
                 task_type = "Unknown"
@@ -97,40 +87,40 @@ if datasets:
                 available_metrics = []
 
             st.write("### Detected Task Type")
-            st.write(f"The task type based on the selected target feature is: "
-                     f"**{task_type}**")
+            st.write(
+                f"The task type based on the selected target feature is: "
+                f"**{task_type}**"
+            )
 
             st.subheader("Model Selection")
-            write_helper_text(
-                "Select a model compatible with your detected task type."
-            )
+            write_helper_text("Select a model compatible with your detected task type.")
             selected_model = st.selectbox("Available Models", available_models)
 
             st.subheader("Select Dataset Split")
             write_helper_text(
-                "Choose the proportion of data to use for training "
-                "and testing."
+                "Choose the proportion of data to use for training " "and testing."
             )
-            split_ratio = st.slider(
-                "Training Data Split (%)", min_value=50, max_value=90,
-                value=80, step=5
-            ) / 100.0
+            split_ratio = (
+                st.slider(
+                    "Training Data Split (%)",
+                    min_value=50,
+                    max_value=90,
+                    value=80,
+                    step=5,
+                )
+                / 100.0
+            )
 
             st.subheader("Select Metrics")
             write_helper_text(
-                "Choose one or more metrics to evaluate your model's "
-                "performance."
+                "Choose one or more metrics to evaluate your model's " "performance."
             )
             selected_metrics = st.multiselect(
-                "Available Metrics",
-                available_metrics,
-                default=available_metrics[:1]
+                "Available Metrics", available_metrics, default=available_metrics[:1]
             )
 
             st.subheader("Pipeline Summary")
-            write_helper_text(
-                "Review your pipeline configuration before proceeding."
-            )
+            write_helper_text("Review your pipeline configuration before proceeding.")
 
             st.write("### Selected Configuration")
             st.markdown(f"**Dataset:** {selected_dataset.name}")

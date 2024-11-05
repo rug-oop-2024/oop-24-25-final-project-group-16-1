@@ -1,9 +1,10 @@
-
 import unittest
+
 from autoop.core.storage import LocalStorage, NotFoundError
 import random
 import tempfile
 import os
+
 
 class TestStorage(unittest.TestCase):
 
@@ -47,4 +48,3 @@ class TestStorage(unittest.TestCase):
         keys = self.storage.list("test")
         keys = [f"{os.sep}".join(key.split(f"{os.sep}")[-2:]) for key in keys]
         self.assertEqual(set(keys), set(random_keys))
-        
