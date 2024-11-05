@@ -1,6 +1,16 @@
 import streamlit as st
 import pandas as pd
 from app.core.system import AutoMLSystem
+from autoop.core.ml.model.classification.decision_tree_classifier import (
+    DecisionTreeModel,
+)
+from autoop.core.ml.model.classification.k_nearest_neighbors import KNearestNeighbors
+from autoop.core.ml.model.classification.neural_networks import NeuralNetwork
+from autoop.core.ml.model.regression.lasso_regression import Lasso
+from autoop.core.ml.model.regression.linear_regression import LinearRegressionModel
+from autoop.core.ml.model.regression.multiple_linear_regression import (
+    MultipleLinearRegression,
+)
 from autoop.functional.feature import detect_feature_types
 
 st.set_page_config(page_title="Modelling", page_icon="📈")
@@ -131,8 +141,35 @@ if datasets:
             st.markdown(f"**Training Split:** {split_ratio * 100:.0f}%")
             st.markdown(f"**Metrics:** {', '.join(selected_metrics)}")
 
-            if st.button("Create Pipeline"):
-                st.success("Pipeline created successfully!")
+            # Define model mapping
+            model_mapping = {
+                "Decision Tree Model": DecisionTreeModel,
+                "K Nearest Neighbors": KNearestNeighbors,
+                "Neural Networks": NeuralNetwork,
+                "Linear Regression": LinearRegressionModel,
+                "Lasso Regression": Lasso,
+                "Multiple Linear Regression": MultipleLinearRegression,
+            }
+
+            if st.button("Train Pipeline"):
+                st.write("### Training in Progress")
+                model_class = model_mapping[selected_model]
+                model_name = selected_model
+                model = model_class(name=model_name)
+
+                pipeline_result = automl.train_pipeline(
+                    dataset=selected,
+                    input_features=input_features,
+                    target_feature=target_feature,
+                    model=model,
+                    split_ratio=split_ratio,
+                    metrics=selected_metrics,
+                )
+                st.success("Pipeline trained successfully!")
+
+                st.write("### Training Results")
+                st.write("Below are the results of the pipeline training.")
+                st.json(pipeline_result)
         else:
             st.error("Dataset not found.")
 else:

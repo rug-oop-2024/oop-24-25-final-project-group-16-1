@@ -20,7 +20,7 @@ class Pipeline:
         input_features: List[Feature],
         target_feature: Feature,
         split=0.8,
-    ):
+    ) -> None:
         self._dataset = dataset
         self._model = model
         self._input_features = input_features

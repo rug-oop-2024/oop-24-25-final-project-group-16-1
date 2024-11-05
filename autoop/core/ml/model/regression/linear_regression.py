@@ -5,18 +5,17 @@ from autoop.core.ml.model.model import Model
 
 
 class LinearRegressionModel(Model):
-    def __init__(self, learning_rate: float = 0.01, num_iterations: int = 10) -> None:
+    def _init_(self, learning_rate: float = 0.01, num_iterations: int = 10) -> None:
         """
         Initializes the LinearRegressionModel with specified learning rate and iteration count.
         Args:
             learning_rate (float): The learning rate for gradient descent updates.
             num_iterations (int): The number of iterations for gradient descent.
         """
-        super().__init__(name="LinearRegressionModel")
+        super()._init_(name="LinearRegressionModel")
         self._learning_rate: float = learning_rate
         self._num_iterations: int = num_iterations
         self._weights: Optional[np.ndarray] = None
-        self._bias: float = 0.0
 
     @property
     def learning_rate(self) -> float:
@@ -73,18 +72,9 @@ class LinearRegressionModel(Model):
         """
         if self._weights is None:
             raise ValueError(
-                "Model weights are uninitialized. Call `fit` to train the model."
+                "Model weights are uninitialized. Call fit to train the model."
             )
         return deepcopy(self._weights)
-
-    @property
-    def bias(self) -> float:
-        """
-        Returns the model's learned bias term.
-        Returns:
-            float: The bias term.
-        """
-        return self._bias
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
@@ -93,26 +83,23 @@ class LinearRegressionModel(Model):
             X (np.ndarray): Input feature matrix of shape (num_samples, num_features).
             y (np.ndarray): Target values of shape (num_samples,).
         Notes:
-            Updates the model's weights and bias using gradient descent.
+            Updates the model's weights using gradient descent.
         """
         y = y.flatten()
 
         num_samples, num_features = X.shape
         self._weights = np.zeros(num_features)
-        self._bias = 0.0
 
         for _ in range(self._num_iterations):
-            y_pred = np.dot(X, self._weights) + self._bias
+            y_pred = np.dot(X, self._weights)
 
             dw = (1 / num_samples) * np.dot(X.T, (y_pred - y))
-            db = (1 / num_samples) * np.sum(y_pred - y)
 
             assert (
                 dw.shape == self._weights.shape
             ), f"dw shape {dw.shape} does not match weights shape {self._weights.shape}"
 
             self._weights -= self._learning_rate * dw
-            self._bias -= self._learning_rate * db
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -125,5 +112,5 @@ class LinearRegressionModel(Model):
             ValueError: If the model has not been trained (i.e., weights are None).
         """
         if self._weights is None:
-            raise ValueError("Model is not trained yet. Call `fit` to train the model.")
-        return np.dot(X, self._weights) + self._bias
+            raise ValueError("Model is not trained yet. Call fit to train the model.")
+        return np.dot(X, self._weights)
