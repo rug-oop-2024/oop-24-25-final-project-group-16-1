@@ -6,10 +6,14 @@ from copy import deepcopy
 
 
 class KNearestNeighbors(Model):
-    def __init__(self, name: str, k: int = 3, type: str = "model") -> None:
+    def __init__(
+        self,
+        k: int = 3,
+        name: str = "K-Nearest Neighbors",
+        type: str = "classification",
+    ) -> None:
         """Initializes the KNearestNeighbors model.
         Args:
-            name (str): The name of the model.
             k (int): The number of nearest neighbors to consider.
             type (str): The type of artifact, defaults to "model".
         """
@@ -45,9 +49,7 @@ class KNearestNeighbors(Model):
         """
         self.observations = observations
         self.ground_truth = ground_truth
-        self._parameters = {
-            "observations": observations, "ground_truth": ground_truth
-        }
+        self._parameters = {"observations": observations, "ground_truth": ground_truth}
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
         """Predicts labels for the given observations.
@@ -69,8 +71,6 @@ class KNearestNeighbors(Model):
         module = observation - self._parameters["observations"]
         distances = np.linalg.norm(module, axis=1)
         k_indices = np.argsort(distances)[: self.k]
-        k_nearest_labels = [
-            self._parameters["ground_truth"][i] for i in k_indices
-        ]
+        k_nearest_labels = [self._parameters["ground_truth"][i] for i in k_indices]
         most_common = pd.Series(k_nearest_labels).value_counts()
         return most_common.index[0]

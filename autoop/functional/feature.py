@@ -6,7 +6,7 @@ import pandas as pd
 
 def detect_feature_types(dataset: Dataset) -> List[Feature]:
     """Detects feature types as either
-    'categorical', 'numerical', or 'continuous'.
+    'categorical', 'numeric'.
     Args:
         dataset: Dataset
     Returns:
@@ -16,10 +16,10 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     df = dataset.read()
 
     for column in df.columns:
-        if pd.api.types.is_float_dtype(df[column]):
-            feature_type = "continuous"
-        elif pd.api.types.is_integer_dtype(df[column]):
-            feature_type = "numerical"
+        if pd.api.types.is_integer_dtype(df[column]) or pd.api.types.is_float_dtype(
+            df[column]
+        ):
+            feature_type = "numeric"
         else:
             feature_type = "categorical"
 

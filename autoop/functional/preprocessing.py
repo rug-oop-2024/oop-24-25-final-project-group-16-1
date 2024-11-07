@@ -25,18 +25,12 @@ def preprocess_features(
             data = encoder.fit_transform(
                 raw[feature.name].values.reshape(-1, 1)
             ).toarray()
-            artifact = {
-                "type": "OneHotEncoder", "encoder": encoder.get_params()
-            }
+            artifact = {"type": "OneHotEncoder", "encoder": encoder.get_params()}
             results.append((feature.name, data, artifact))
         elif feature.feature_type in ["numeric", "numerical"]:
             scaler = StandardScaler()
-            data = scaler.fit_transform(
-                raw[feature.name].values.reshape(-1, 1)
-            )
-            artifact = {
-                "type": "StandardScaler", "scaler": scaler.get_params()
-            }
+            data = scaler.fit_transform(raw[feature.name].values.reshape(-1, 1))
+            artifact = {"type": "StandardScaler", "scaler": scaler.get_params()}
             results.append((feature.name, data, artifact))
         else:
             raise ValueError(

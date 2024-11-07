@@ -25,7 +25,7 @@ class Pipeline:
         self._model = model
         self._input_features = input_features
         self._target_feature = target_feature
-        self._metrics = metrics
+        self._metrics = metrics if isinstance(metrics, list) else [metrics]
         self._artifacts = {}
         self._split = split
 
@@ -34,15 +34,10 @@ class Pipeline:
             target_feature.feature_type == "categorical"
             and model.type != "classification"
         ):
+            raise ValueError("Model type must be classif. 4 categorical target feature")
+        if target_feature.feature_type == "numeric" and model.type != "regression":
             raise ValueError(
-                "Model type must be classif. 4 categorical target feature"
-            )
-        if (
-            target_feature.feature_type == "continuous"
-            and model.type != "regression"
-        ):
-            raise ValueError(
-                "Model type must be regression for continuous target feature"
+                "Model type must be regression for numerical target feature"
             )
 
     def __str__(self):
@@ -98,32 +93,22 @@ class Pipeline:
             [self._target_feature], self._dataset
         )[0]
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(
-            self._input_features, self._dataset
-        )
+        input_results = preprocess_features(self._input_features, self._dataset)
         for feature_name, data, artifact in input_results:
             self._register_artifact(feature_name, artifact)
         self._output_vector = target_data
-        self._input_vectors = [
-            data for (feature_name, data, artifact) in input_results
-        ]
+        self._input_vectors = [data for (feature_name, data, artifact) in input_results]
 
     def _split_data(self):
         split = self._split
         self._train_X = [
-            vector[
-                : int(split * len(vector))] for vector in self._input_vectors
+            vector[: int(split * len(vector))] for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[
-                int(split * len(vector)):] for vector in self._input_vectors
+            vector[int(split * len(vector)) :] for vector in self._input_vectors
         ]
-        self._train_y = self._output_vector[
-            : int(split * len(self._output_vector))
-        ]
-        self._test_y = self._output_vector[
-            int(split * len(self._output_vector)):
-            ]
+        self._train_y = self._output_vector[: int(split * len(self._output_vector))]
+        self._test_y = self._output_vector[int(split * len(self._output_vector)) :]
 
     def _compact_vectors(self, vectors: List[np.array]) -> np.array:
         return np.concatenate(vectors, axis=1)
@@ -135,9 +120,7 @@ class Pipeline:
 
     def _evaluate(self, X: np.ndarray, Y: np.ndarray) -> List[tuple]:
         predictions = self._model.predict(X)
-        self._predictions = (
-            predictions
-        )
+        self._predictions = predictions
 
         metrics_results = []
         for metric in self._metrics:
@@ -154,9 +137,7 @@ class Pipeline:
         self._train()
         train_X = self._compact_vectors(self._train_X)
         train_y = self._train_y
-        train_metrics_results, train_predictions = self._evaluate(
-            train_X, train_y
-        )
+        train_metrics_results, train_predictions = self._evaluate(train_X, train_y)
 
         test_X = self._compact_vectors(self._test_X)
         test_y = self._test_y

@@ -4,9 +4,9 @@ from typing import Any
 
 
 class DecisionTreeModel(Model):
-    def _init_(self, name: str, **kwargs):
-        super()._init_(name=name, type="model")
-        self.model = DecisionTreeClassifier(**kwargs)
+    def __init__(self, name: str = "Decision Trees", type: str = "classification"):
+        super().__init__(name=name, type=type)
+        self.model = DecisionTreeClassifier()
 
     def fit(self, x: Any, y: Any) -> None:
         """

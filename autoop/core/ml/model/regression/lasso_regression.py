@@ -5,7 +5,9 @@ from typing import Dict, Any
 
 
 class Lasso(Model):
-    def __init__(self, name: str, alpha: float = 1.0) -> None:
+    def __init__(
+        self, name: str = "Lasso", type: str = "regression", alpha: float = 1.0
+    ) -> None:
         """
         Initializes the Lasso model with a specified name and
         regularization strength.
@@ -15,7 +17,7 @@ class Lasso(Model):
             the amount of penalty applied to the model coefficients;
             must be positive.
         """
-        super().__init__(name="Lasso Regression")
+        super().__init__(name=name, type=type)
         self._alpha: float = alpha
         self._model: SklearnLasso = SklearnLasso(alpha=self._alpha)
         self._parameters: Dict[str, Any] = {}

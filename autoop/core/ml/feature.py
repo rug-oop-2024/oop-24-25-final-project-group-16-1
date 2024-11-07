@@ -7,23 +7,21 @@ class Feature:
     def __init__(
         self,
         name: str,
-        feature_type: Literal["numeric", "categorical", "continuous"],
+        feature_type: Literal["numeric", "categorical"],
         values: List[Any],
     ) -> None:
         """
         Initializes the Feature instance.
         Args:
             name (str): The name of the feature.
-            feature_type (Literal['numeric', 'categorical', 'continuous']):
-                The type of the feature, which can be 'numeric', 'categorical',
-                or 'continuous'.
+            feature_type (Literal['numeric', 'categorical'):
+                The type of the feature, which can be 'numeric' or
+                'categorical'.
             values (List[Any]): A list of values for the feature, where values
                 can be of any type depending on the feature type.
         """
         self._name: str = name
-        self._feature_type: Literal["numeric", "categorical", "continuous"] = (
-            feature_type
-        )
+        self._feature_type: Literal["numeric", "categorical"] = feature_type
         self._values: List[Any] = values
 
     @property
@@ -45,26 +43,22 @@ class Feature:
         self._name = value
 
     @property
-    def feature_type(self) -> Literal["numeric", "categorical", "continuous"]:
+    def feature_type(self) -> Literal["numeric", "categorical"]:
         """Gets the feature type."""
         return self._feature_type
 
     @feature_type.setter
-    def feature_type(
-        self, value: Literal["numeric", "categorical", "continuous"]
-    ) -> None:
+    def feature_type(self, value: Literal["numeric", "categorical"]) -> None:
         """
         Sets the feature type.
         Args:
-            value (Literal['numeric', 'categorical', 'continuous']): The new
+            value (Literal['numeric', 'categorical']): The new
             type for the feature.
         Raises:
             ValueError: If the feature type is not one of the allowed values.
         """
-        if value not in {"numeric", "categorical", "continuous"}:
-            raise ValueError(
-                "Feature type must be 'numeric','categorical', or 'continuous'"
-            )
+        if value not in {"numeric", "categorical"}:
+            raise ValueError("Feature type must be 'numeric' or 'categorical'.")
         self._feature_type = value
 
     @property
@@ -86,24 +80,21 @@ class Feature:
         self._values = value
 
     def get_statistics(self) -> Dict[str, float]:
-        """Calculates basic statistics for numeric or continuous features.
+        """Calculates basic statistics for numeric features.
         Returns:
             Dict[str, float]: A dictionary containing the mean, standard
-            deviation, minimum, and maximum values of the numeric or continuous
-            feature.
+            deviation, minimum, and maximum values of the numeric feature.
         Raises:
-            ValueError: If the feature type is not 'numeric' or 'continuous'.
+            ValueError: If the feature type is not 'numeric'.
         """
-        if self.feature_type in {"numeric", "continuous"}:
+        if self.feature_type == "numeric":
             return {
                 "mean": float(np.mean(self._values)),
                 "std": float(np.std(self._values)),
                 "min": float(np.min(self._values)),
                 "max": float(np.max(self._values)),
             }
-        raise ValueError(
-            "Statistics can only be computed 4 numeric or continuous features."
-        )
+        raise ValueError("Statistics can only be computed 4 numeric features.")
 
     def __str__(self) -> str:
         """String representation of the Feature instance.

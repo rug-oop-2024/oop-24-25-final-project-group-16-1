@@ -1,31 +1,8 @@
 import streamlit as st
 import pandas as pd
 from app.core.system import AutoMLSystem
-from autoop.core.ml.metric import (
-    Accuracy,
-    MeanAbsoluteError,
-    MeanSquaredError,
-    Precision,
-    R2Score,
-    Recall,
-)
-from autoop.core.ml.model import (
-    CLASSIFICATION_MODELS, REGRESSION_MODELS, get_model
-)
-from autoop.core.ml.model.classification.decision_tree_classifier import (
-    DecisionTreeModel,
-)
-from autoop.core.ml.model.classification.k_nearest_neighbors import (
-    KNearestNeighbors
-)
-from autoop.core.ml.model.classification.neural_networks import NeuralNetwork
-from autoop.core.ml.model.regression.lasso_regression import Lasso
-from autoop.core.ml.model.regression.linear_regression import (
-    LinearRegressionModel
-)
-from autoop.core.ml.model.regression.multiple_linear_regression import (
-    MultipleLinearRegression,
-)
+from autoop.core.ml.metric import METRICS, get_metric
+from autoop.core.ml.model import CLASSIFICATION_MODELS, REGRESSION_MODELS, get_model
 from autoop.core.ml.pipeline import Pipeline
 from autoop.functional.feature import detect_feature_types
 
@@ -54,12 +31,9 @@ write_helper_text(
 if datasets:
     data = [dataset.name for dataset in datasets]
     df = pd.DataFrame(data)
-    selected_dataset_name = st.selectbox(
-        "Select a dataset to view or delete:", data
-    )
+    selected_dataset_name = st.selectbox("Select a dataset to view or delete:", data)
     selected = next(
-        dataset for dataset in datasets
-        if dataset.name == selected_dataset_name
+        dataset for dataset in datasets if dataset.name == selected_dataset_name
     )
 
     if selected_dataset_name:
@@ -81,32 +55,23 @@ if datasets:
             )
 
             input_features = st.multiselect(
-                "Select Input Features", feature_names,
-                default=feature_names[:-1]
+                "Select Input Features", feature_names, default=feature_names[:-1]
             )
             target_feature = st.selectbox(
-                "Select Target Feature", feature_names,
-                index=len(feature_names) - 1
+                "Select Target Feature", feature_names, index=len(feature_names) - 1
             )
 
             target_feature_type = next(
-                (
-                    f.feature_type for f in features
-                    if f.name == target_feature
-                ), None
+                (f.feature_type for f in features if f.name == target_feature), None
             )
             if target_feature_type == "categorical":
-                task_type = "Classification"
+                task_type = "classification"
                 available_models = CLASSIFICATION_MODELS
-                available_metrics = ["Accuracy", "Precision", "Recall"]
-            elif target_feature_type in {"numerical", "continuous"}:
-                task_type = "Regression"
+                available_metrics = METRICS[:3]
+            elif target_feature_type == "numeric":
+                task_type = "regression"
                 available_models = REGRESSION_MODELS
-                available_metrics = [
-                    "Mean Squared Error",
-                    "Mean Absolute Error",
-                    "R2 Score",
-                ]
+                available_metrics = METRICS[3:]
             else:
                 task_type = "Unknown"
                 available_models = []
@@ -119,9 +84,7 @@ if datasets:
             )
 
             st.subheader("Model Selection")
-            write_helper_text(
-                "Select a model compatible with your detected task type."
-                )
+            write_helper_text("Select a model compatible with your detected task type.")
             selected_model = st.selectbox("Available Models", available_models)
 
             st.subheader("Select Dataset Split")
@@ -134,9 +97,9 @@ if datasets:
             split_ratio = (
                 st.slider(
                     "Training Data Split (%)",
-                    min_value=50,
-                    max_value=90,
-                    value=80,
+                    min_value=0,
+                    max_value=100,
+                    value=50,
                     step=5,
                 )
                 / 100.0
@@ -146,18 +109,13 @@ if datasets:
             write_helper_text(
                 """
                 Choose one or more metrics to
-                evaluate your model's " "performance.
+                evaluate your model's performance.
                 """
             )
-            selected_metrics = st.multiselect(
-                "Available Metrics", available_metrics,
-                default=available_metrics[:1]
-            )
+            selected_metric = st.selectbox("Available Metric", available_metrics)
 
             st.subheader("Pipeline Summary")
-            write_helper_text(
-                "Review your pipeline configuration before proceeding."
-            )
+            write_helper_text("Review your pipeline configuration before proceeding.")
 
             st.write("### Selected Configuration")
             st.markdown(f"**Dataset:** {selected_dataset.name}")
@@ -166,42 +124,19 @@ if datasets:
             st.markdown(f"**Task Type:** {task_type}")
             st.markdown(f"**Model:** {selected_model}")
             st.markdown(f"**Training Split:** {split_ratio * 100:.0f}%")
-            st.markdown(f"**Metrics:** {', '.join(selected_metrics)}")
-
-            model_mapping = {
-                "Decision Trees": DecisionTreeModel,
-                "K Nearest Neighbors": KNearestNeighbors,
-                "Neural Networks": NeuralNetwork,
-                "Linear Regression": LinearRegressionModel,
-                "Lasso Regression": Lasso,
-                "Multiple Linear Regression": MultipleLinearRegression,
-            }
+            st.markdown(f"**Metrics:** {selected_metric}")
 
             if st.button("Train Pipeline"):
                 st.write("### Training in Progress")
                 model = get_model(selected_model)
+                metric = get_metric(selected_metric)
 
                 input_f = [f for f in features if f.name in input_features]
-                target_f = next(
-                    f for f in features if f.name == target_feature
-                )
-                metric_mapping = {
-                    "mean_squared_error": MeanSquaredError,
-                    "mean_absolute_error": MeanAbsoluteError,
-                    "r2_score": R2Score,
-                    "accuracy": Accuracy,
-                    "precision": Precision,
-                    "recall": Recall,
-                }
-                metrics = [
-                    metric_mapping[name]()
-                    for name in selected_metrics
-                    if name in metric_mapping
-                ]
+                target_f = next(f for f in features if f.name == target_feature)
 
                 pipeline = Pipeline(
-                    metrics=metrics,
-                    dataset=selected,
+                    metrics=metric,
+                    dataset=selected_dataset,
                     model=model,
                     input_features=input_f,
                     target_feature=target_f,
@@ -215,15 +150,11 @@ if datasets:
                     {
                         "train_metrics": {
                             metric.__class__.__name__: result
-                            for metric, result in pipeline_result[
-                                "train_metrics"
-                            ]
+                            for metric, result in pipeline_result["train_metrics"]
                         },
                         "test_metrics": {
                             metric.__class__.__name__: result
-                            for metric, result in pipeline_result[
-                                "test_metrics"
-                            ]
+                            for metric, result in pipeline_result["test_metrics"]
                         },
                         "train_predictions": pipeline_result[
                             "train_predictions"

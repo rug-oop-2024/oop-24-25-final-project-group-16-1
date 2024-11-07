@@ -6,7 +6,11 @@ from autoop.core.ml.model.model import Model
 
 class LinearRegressionModel(Model):
     def __init__(
-            self, learning_rate: float = 0.01, num_iterations: int = 10
+        self,
+        name: str = "Linear Regression",
+        type: str = "regression",
+        learning_rate: float = 0.01,
+        num_iterations: int = 10,
     ) -> None:
         """
         Initializes the LinearRegressionModel with specified
@@ -17,7 +21,7 @@ class LinearRegressionModel(Model):
             num_iterations (int): The number of iterations
             for gradient descent.
         """
-        super().__init__(name="LinearRegressionModel")
+        super().__init__(name=name, type=type)
         self._learning_rate: float = learning_rate
         self._num_iterations: int = num_iterations
         self._weights: Optional[np.ndarray] = None
@@ -103,9 +107,9 @@ class LinearRegressionModel(Model):
 
             dw = (1 / num_samples) * np.dot(X.T, (y_pred - y))
 
-            assert dw.shape == self._weights.shape, (
-                f"dw shape {dw.shape} not match weights {self._weights.shape}"
-            )
+            assert (
+                dw.shape == self._weights.shape
+            ), f"dw shape {dw.shape} not match weights {self._weights.shape}"
 
             self._weights -= self._learning_rate * dw
 
@@ -122,7 +126,5 @@ class LinearRegressionModel(Model):
             (i.e., weights are None).
         """
         if self._weights is None:
-            raise ValueError(
-                "Model is not trained yet. Call fit to train the model."
-            )
+            raise ValueError("Model is not trained yet. Call fit to train the model.")
         return np.dot(X, self._weights)

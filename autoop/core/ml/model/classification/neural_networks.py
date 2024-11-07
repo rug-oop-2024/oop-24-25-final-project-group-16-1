@@ -5,17 +5,17 @@ from autoop.core.ml.model.model import Model
 class NeuralNetwork(Model):
     def __init__(
         self,
-        name: str,
-        input_size: int,
-        hidden_size: int,
-        output_size: int,
+        input_size: int = 4,
+        hidden_size: int = 32,
+        output_size: int = 2,
         learning_rate: float = 0.01,
-        num_iterations: int = 10,
+        num_iterations: int = 10000,
+        name: str = "Neural Networks",
+        type: str = "classification",
     ):
         """
         Initializes the Neural Network with given architecture and parameters.
         Args:
-            name (str): The name of the model.
             input_size (int): The number of input features.
             hidden_size (int): The number of neurons in the hidden layer.
             output_size (int): The number of output classes.
@@ -24,20 +24,16 @@ class NeuralNetwork(Model):
             num_iterations (int, optional): Number of iterations for training.
                                              Defaults to 10000.
         """
-        super()._init_(name=name)
+        super().__init__(name=name, type=type)
         self._input_size: int = input_size
         self._hidden_size: int = hidden_size
         self._output_size: int = output_size
         self._learning_rate: float = learning_rate
         self._num_iterations: int = num_iterations
 
-        self._W1: np.ndarray = np.random.randn(
-            self._input_size, self._hidden_size
-        )
+        self._W1: np.ndarray = np.random.randn(self._input_size, self._hidden_size)
         self._b1: np.ndarray = np.zeros((1, self._hidden_size))
-        self._W2: np.ndarray = np.random.randn(
-            self._hidden_size, self._output_size
-        )
+        self._W2: np.ndarray = np.random.randn(self._hidden_size, self._output_size)
         self._b2: np.ndarray = np.zeros((1, self._output_size))
 
     @property
@@ -142,9 +138,7 @@ class NeuralNetwork(Model):
             z2 = np.dot(a1, self._W2) + self._b2
             a2 = self.sigmoid(z2)
 
-            loss = -np.mean(
-                y * np.log(a2 + 1e-10) + (1 - y) * np.log(1 - a2 + 1e-10)
-            )
+            loss = -np.mean(np.sum(y * np.log(a2 + 1e-10), axis=1))
 
             dz2 = a2 - y
             dW2 = np.dot(a1.T, dz2)
