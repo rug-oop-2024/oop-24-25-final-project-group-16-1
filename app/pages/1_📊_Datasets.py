@@ -36,7 +36,7 @@ if uploaded_file:
     dataset_name = st.text_input("Enter dataset name")
 
     if dataset_name:
-        asset_path = f"dataset/{dataset_name}"
+        asset_path = f"dataset/{dataset_name}.cvs"
 
         new_dataset = Dataset.from_dataframe(
             data=data, name=dataset_name, asset_path=asset_path, version="1.0.0"

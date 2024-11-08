@@ -146,6 +146,7 @@ if datasets:
 
                 st.success("Pipeline trained successfully!")
                 st.write("### Training Results")
+                write_helper_text("Scroll down if you want to save the pipeline.")
                 st.json(
                     {
                         "train_metrics": {
@@ -164,6 +165,16 @@ if datasets:
                         ].tolist(),
                     }
                 )
+                if st.button("Save Pipeline"):
+                    st.write("### Saving pipeline...")
+                    pipeline_name = st.text_input(
+                        "Enter Pipeline Name", value=selected_dataset_name
+                    )
+
+                    if pipeline_name:
+                        pipeline.metadata["name"] = pipeline_name
+                        pipeline.save()
+                        st.success(f"Pipeline '{pipeline_name}' saved successfully!")
         else:
             st.error("Dataset not found.")
 else:
