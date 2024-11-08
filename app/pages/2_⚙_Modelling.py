@@ -179,9 +179,16 @@ if datasets:
                     )
 
                     if pipeline_name:
-                        pipeline.metadata["name"] = pipeline_name
+                        asset_path = f"artifacts/{pipeline_name}"
                         pipeline.save()
-                        st.success(f"Pipeline '{pipeline_name}' saved successfully!")
+
+                        if st.button("Save Pipeline"):
+                            automl.registry.register(pipeline)
+                            st.success(
+                                f"Pipeline '{pipeline_name}' saved successfully!"
+                            )
+                            st.rerun()
+
         else:
             st.error("Dataset not found.")
 else:

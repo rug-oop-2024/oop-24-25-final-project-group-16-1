@@ -172,13 +172,13 @@ If you did not implement the feature
 | `ST/modelling/pipeline/split`         | FN           |   Deborah            |     X   | |
 | `ST/modelling/pipeline/metrics`       | FN           |   Deborah            |     X   | |
 | `ST/modelling/pipeline/summary`       | FN           |   Deborah            |     X   | |
-| `ST/modelling/pipeline/train`         | FN           |   Ana                |         | |
-| `ST/modelling/pipeline/save`          | FN           |                      |         | |
-| `ST/page/deployment`                  | FN           |                      |         | |
-| `ST/deployment/load`                  | FN           |                      |         | |
-| `ST/deployment/predict`               | FN           |                      |         | |
+| `ST/modelling/pipeline/train`         | FN           |   Ana                |     X   | |
+| `ST/modelling/pipeline/save`          | FN           |   Ana                |         | |
+| `ST/page/deployment`                  | FN           |   Ana                |         | |
+| `ST/deployment/load`                  | FN           |   Ana                |         | |
+| `ST/deployment/predict`               | FN           |   Ana                |         | |
 
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|---------|-----|
-| `ST/datasets/management/delete`       | FN           |   Ana                |     X   | |
+| `ST/datasets/management/delete`       | FN           |   Ana                |     X   |     |

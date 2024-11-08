@@ -2,6 +2,7 @@ from typing import Optional, List
 import pandas as pd
 from autoop.core.ml.artifact import Artifact
 import io
+import base64
 
 
 class Dataset(Artifact):
@@ -36,8 +37,15 @@ class Dataset(Artifact):
         Returns:
             pd.DataFrame: The dataset as a DataFrame.
         """
-        csv_data = super().read().decode()
-        return pd.read_csv(io.BytesIO(csv_data))
+        if isinstance(self.data, str):
+            decoded_data = base64.b64decode(self.data)
+        elif isinstance(self.data, bytes):
+            decoded_data = self.data
+        else:
+            raise ValueError("Data is neither a valid Base64 string nor binary data.")
+
+        # Load the decoded data into a DataFrame
+        return pd.read_csv(io.BytesIO(decoded_data))
 
     def save(self, data: pd.DataFrame) -> bytes:
         """
