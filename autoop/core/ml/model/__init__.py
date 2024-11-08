@@ -2,9 +2,7 @@ from autoop.core.ml.model.classification.decision_tree_classifier import (
     DecisionTreeModel,
 )
 from autoop.core.ml.model.classification.k_nearest_neighbors import KNearestNeighbors
-from autoop.core.ml.model.classification.logistic_regression import (
-    LogisticRegressionModel,
-)
+from autoop.core.ml.model.classification.random_forest import RandomForestModel
 from autoop.core.ml.model.model import Model
 from autoop.core.ml.model.regression.linear_regression import LinearRegressionModel
 from autoop.core.ml.model.regression.multiple_linear_regression import (
@@ -13,7 +11,11 @@ from autoop.core.ml.model.regression.multiple_linear_regression import (
 from autoop.core.ml.model.regression.lasso_regression import Lasso
 from typing import Type
 
-CLASSIFICATION_MODELS = ["Decision Trees", "K-Nearest Neighbors", "Logistic Regression"]
+CLASSIFICATION_MODELS = [
+    "Decision Trees",
+    "K-Nearest Neighbors",
+    "Random Forest",
+]
 
 REGRESSION_MODELS = [
     "Lasso Regression",
@@ -34,7 +36,7 @@ def get_model(name: str) -> Type["Model"]:
     models_map = {
         "Decision Trees": DecisionTreeModel,
         "K-Nearest Neighbors": KNearestNeighbors,
-        "Logistic Regression": LogisticRegressionModel,
+        "Random Forest": RandomForestModel,
         "Lasso Regression": Lasso,
         "Linear Regression": LinearRegressionModel,
         "Multiple Linear Regression": MultipleLinearRegression,

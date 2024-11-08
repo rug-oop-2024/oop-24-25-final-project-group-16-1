@@ -15,6 +15,7 @@ st.write(
 )
 
 automl = AutoMLSystem.get_instance()
+
 saved_pipelines = automl.registry.list(type="pipeline")
 
 if saved_pipelines:
@@ -51,7 +52,6 @@ if saved_pipelines:
         if csv_file is not None:
             try:
                 dataset = Dataset.from_csv(csv_file)
-
                 input_features = selected_pipeline.metadata.get("input_features", [])
                 X = preprocess_features(input_features, dataset)
 

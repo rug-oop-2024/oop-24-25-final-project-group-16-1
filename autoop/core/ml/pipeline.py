@@ -94,7 +94,10 @@ class Pipeline:
             [self._target_feature], self._dataset
         )[0]
         self._register_artifact(target_feature_name, artifact)
-        input_results = preprocess_features(self._input_features, self._dataset)
+        if target_data.ndim > 1 and target_data.shape[1] > 1:
+            # Convert one-hot encoding to a single column of categorical labels
+            target_data = np.argmax(target_data, axis=1).reshape(-1, 1)
+            input_results = preprocess_features(self._input_features, self._dataset)
         for feature_name, data, artifact in input_results:
             self._register_artifact(feature_name, artifact)
         self._output_vector = target_data

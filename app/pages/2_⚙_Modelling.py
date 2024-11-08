@@ -142,7 +142,14 @@ if datasets:
                     target_feature=target_f,
                     split=split_ratio,
                 )
-                pipeline_result = pipeline.execute()
+                if selected_model == "Logistic Regression":
+                    preprocessed_pipeline = pipeline._preprocess_features()
+                    if preprocessed_pipeline:
+                        pipeline_result = preprocessed_pipeline.execute()
+                    else:
+                        st.error("Preprocessing failed.")
+                else:
+                    pipeline_result = pipeline.execute()
 
                 st.success("Pipeline trained successfully!")
                 st.write("### Training Results")
