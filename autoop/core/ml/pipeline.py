@@ -47,24 +47,22 @@ class Pipeline:
         self._artifacts = {}
         self._split = split
 
-        if (
-            target_feature.feature_type == "categorical"
-            and model.type != "classification"
-        ):
-            raise ValueError(
-                """
-                Model type must be classification for categorical
-                target feature
-                """
-            )
+        if target_feature.feature_type == "categorical":
+            if model.type != "classification":
+                raise ValueError(
+                    """
+                    Model type must be classification for categorical
+                    target feature
+                    """
+                )
 
-        if (
-            target_feature.feature_type == "numeric"
-            and model.type != "regression"
-        ):
-            raise ValueError(
-                "Model type must be regression for numerical target feature"
-            )
+        if target_feature.feature_type == "numeric":
+            if model.type != "regression":
+                raise ValueError(
+                    """
+                    Model type must be regression for numerical target feature
+                    """
+                )
 
     def __str__(self) -> str:
         """
