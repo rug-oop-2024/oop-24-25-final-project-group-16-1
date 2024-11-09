@@ -12,6 +12,11 @@ import numpy as np
 
 
 class Pipeline:
+    """
+    The Pipeline class manages the sequence of operations required for
+    a machine learning workflow, including data preprocessing,
+    model training, and evaluation.
+    """
     def __init__(
         self,
         metrics: List[Metric],
@@ -59,7 +64,15 @@ class Pipeline:
                 "Model type must be regression for numerical target feature"
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the Pipeline instance,
+        showing the model type, input and target features, split ratio,
+        and evaluation metrics.
+
+        Returns:
+            str: String representation of the Pipeline instance.
+        """
         return (
             f"Pipeline(\n"
             f"    model={self._model.type},\n"
@@ -158,11 +171,12 @@ class Pipeline:
             )
 
         self._train_X = [
-            vector[
-                : int(split * len(vector))] for vector in self._input_vectors
+            vector[: int(split * len(vector))]
+            for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[int(split * len(vector)):] for vector in self._input_vectors
+            vector[int(split * len(vector)):]
+            for vector in self._input_vectors
         ]
         self._train_y = self._output_vector[
             : int(split * len(self._output_vector))

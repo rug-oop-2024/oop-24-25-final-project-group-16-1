@@ -5,6 +5,11 @@ from typing import Dict, Any
 
 
 class Lasso(Model):
+    """
+    Lasso regression model implementation using Scikit-Learn's Lasso.
+    This model applies L1 regularization to encourage sparsity in feature
+    weights.
+    """
     def __init__(
         self, name: str = "Lasso", type: str = "regression", alpha: float = 1.0
     ) -> None:

@@ -7,6 +7,18 @@ from copy import deepcopy
 
 
 class MultipleLinearRegression(Model):
+    """
+    A multiple linear regression model implementation that uses
+    the LinearRegressionModel as the base model for gradient
+    descent optimization.
+
+    Attributes:
+        name (str): The name identifier for the model.
+        type (str): Type of model, default is "regression".
+        learning_rate (float): The step size for gradient descent.
+        num_iterations (int): The number of gradient descent iterations.
+        parameters (dict): The trained weights after model fitting.
+    """
     def __init__(
         self,
         name: str = "Multiple Linear Regression",

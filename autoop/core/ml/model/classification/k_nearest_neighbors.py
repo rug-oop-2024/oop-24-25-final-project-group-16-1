@@ -6,6 +6,11 @@ from copy import deepcopy
 
 
 class KNearestNeighbors(Model):
+    """
+    A K-Nearest Neighbors (KNN) model for classification tasks. This model
+    assigns a label to each observation based on the most common label among
+    its k nearest neighbors in the training dataset.
+    """
     def __init__(
         self,
         k: int = 3,

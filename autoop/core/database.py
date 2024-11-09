@@ -14,6 +14,13 @@ class Database:
     """
 
     def __init__(self, storage: Storage):
+        """
+        Initialize the Database with a specified storage backend and
+        load data.
+
+        Args:
+            storage (Storage): The storage instance for persistence.
+        """
         self._storage = storage
         self._data = {}
         self._load()

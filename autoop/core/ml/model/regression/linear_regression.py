@@ -5,6 +5,16 @@ from autoop.core.ml.model.model import Model
 
 
 class LinearRegressionModel(Model):
+    """
+    A basic linear regression model that uses gradient descent
+    for training.
+
+    Attributes:
+        learning_rate (float): The step size for each gradient descent update.
+        num_iterations (int): Number of iterations to run the gradient descent.
+        weights (Optional[np.ndarray]): The model parameters (weights),
+        updated after training.
+    """
     def __init__(
         self,
         name: str = "Linear Regression",

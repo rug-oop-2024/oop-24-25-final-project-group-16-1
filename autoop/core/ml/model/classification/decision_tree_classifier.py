@@ -4,6 +4,10 @@ from typing import Any
 
 
 class DecisionTreeModel(Model):
+    """
+    A decision tree model that uses Scikit-Learn's
+    DecisionTreeClassifier for classification tasks.
+    """
     def __init__(
             self, name: str = "Decision Trees", type: str = "classification"
     ) -> None:

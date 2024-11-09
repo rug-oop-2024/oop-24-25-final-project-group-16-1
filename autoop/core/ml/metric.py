@@ -67,6 +67,17 @@ class Accuracy(Metric):
     """
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
+        """
+        Evaluates accuracy, calculating the ratio of correct predictions
+        to the total number of predictions.
+
+        Args:
+            y_true (List[Any]): The true labels.
+            y_pred (List[Any]): The predicted labels.
+
+        Returns:
+            float: The accuracy score, or 0.0 if `y_true` is empty.
+        """
         if len(y_true) != len(y_pred):
             raise ValueError(
                 "Length of true labels and predicted labels must match."
@@ -81,6 +92,17 @@ class MeanSquaredError(Metric):
     """
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
+        """
+        Computes the mean of the squared differences
+        between true and predicted values.
+
+        Args:
+            y_true (List[float]): The true labels.
+            y_pred (List[float]): The predicted labels.
+
+        Returns:
+            float: The Mean Squared Error.
+        """
         y_true = np.array(y_true).flatten()
         y_pred = np.array(y_pred).flatten()
         if len(y_true) != len(y_pred):
@@ -96,6 +118,17 @@ class MeanAbsoluteError(Metric):
     """
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
+        """
+        Computes the mean of absolute differences
+        between true and predicted values.
+
+        Args:
+            y_true (List[float]): The true labels.
+            y_pred (List[float]): The predicted labels.
+
+        Returns:
+            float: The Mean Absolute Error.
+        """
         if len(y_true) != len(y_pred):
             raise ValueError(
                 "Length of true labels and predicted labels must match."
@@ -109,6 +142,17 @@ class R2Score(Metric):
     """
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
+        """
+        Computes the R-squared value, representing the proportion of variance
+        in `y_true` that is predictable from `y_pred`.
+
+        Args:
+            y_true (List[float]): The true labels.
+            y_pred (List[float]): The predicted labels.
+
+        Returns:
+            float: The R-squared score, or 0.0 if variance in `y_true` is zero.
+        """
         if len(y_true) != len(y_pred):
             raise ValueError(
                 "Length of true labels and predicted labels must match."
@@ -124,6 +168,18 @@ class Precision(Metric):
     """
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
+        """
+        Computes the ratio of true positive
+        predictions to all positive predictions.
+
+        Args:
+            y_true (List[Any]): The true labels.
+            y_pred (List[Any]): The predicted labels.
+
+        Returns:
+            float: The precision score, or 0.0 if no
+            positive predictions were made.
+        """
         if len(y_true) != len(y_pred):
             raise ValueError(
                 "Length of true labels and predicted labels must match."
@@ -145,6 +201,17 @@ class Recall(Metric):
     """
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
+        """
+        Computes the ratio of true positive predictions
+        to all actual positive cases.
+
+        Args:
+            y_true (List[Any]): The true labels.
+            y_pred (List[Any]): The predicted labels.
+
+        Returns:
+            float: The recall score, or 0.0 if there are no actual positives.
+        """
         if len(y_true) != len(y_pred):
             raise ValueError(
                 "Length of true labels and predicted labels must match."

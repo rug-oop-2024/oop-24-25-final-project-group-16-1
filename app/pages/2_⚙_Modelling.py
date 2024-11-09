@@ -13,7 +13,13 @@ from autoop.functional.feature import detect_feature_types
 st.set_page_config(page_title="Modelling", page_icon="📈")
 
 
-def write_helper_text(text: str):
+def write_helper_text(text: str) -> None:
+    """
+    Display helper text in a lighter color in the Streamlit app.
+
+    Args:
+        text (str): The text to display as helper information.
+    """
     st.write(f'<p style="color: #888;">{text}</p>', unsafe_allow_html=True)
 
 
@@ -105,16 +111,13 @@ if datasets:
                 training " "and testing.
                 """
             )
-            split_ratio = (
-                st.slider(
-                    "Training Data Split (%)",
-                    min_value=0,
-                    max_value=100,
-                    value=50,
-                    step=5,
-                )
-                / 100.0
-            )
+            split_ratio = st.slider(
+                "Training Data Split (%)",
+                min_value=0,
+                max_value=100,
+                value=50,
+                step=5,
+            ) / 100.0
 
             st.subheader("Select Metrics")
             write_helper_text(
@@ -194,8 +197,8 @@ if datasets:
             st.write("Save the trained pipeline.")
             st.write(
                 """
-                Note: Even if you didnt press the 'Train Pipeline'button,
-                the saved pipeline will be trained anyways.
+                Note: Even if you didn't press the 'Train Pipeline' button,
+                the saved pipeline will be trained anyway.
                 """
             )
             pipeline_name = st.text_input("Enter Pipeline Name")
