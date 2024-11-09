@@ -143,7 +143,6 @@
 # feature type detection library.
 # Location: docs/decisions/DSC-0014-automatic-detection-of-feature-types.md
 
-
 # DSC-0015: Preprocessing Features with Scikit-Learn Encoders
 # Date: 2024-11-08
 # Decision: Use Scikit-Learn's OneHotEncoder for categorical features
