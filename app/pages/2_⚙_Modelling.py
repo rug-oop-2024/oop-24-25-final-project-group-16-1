@@ -110,16 +110,13 @@ if datasets:
                 training and testing.
                 """
             )
-            split_ratio = (
-                st.slider(
-                    "Training Data Split (%)",
-                    min_value=0,
-                    max_value=100,
-                    value=50,
-                    step=5,
-                )
-                / 100.0
-            )
+            split_ratio = st.slider(
+                "Training Data Split (%)",
+                min_value=0,
+                max_value=100,
+                value=50,
+                step=5,
+            ) / 100.0
 
             st.subheader("Select Metrics")
             write_helper_text(
