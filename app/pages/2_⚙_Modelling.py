@@ -4,7 +4,9 @@ import streamlit as st
 from app.core.system import AutoMLSystem
 from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.metric import METRICS, get_metric
-from autoop.core.ml.model import CLASSIFICATION_MODELS, REGRESSION_MODELS, get_model
+from autoop.core.ml.model import (
+    CLASSIFICATION_MODELS, REGRESSION_MODELS, get_model
+)
 from autoop.core.ml.pipeline import Pipeline
 from autoop.functional.feature import detect_feature_types
 
@@ -32,9 +34,12 @@ write_helper_text(
 
 if datasets:
     data = [dataset.name for dataset in datasets]
-    selected_dataset_name = st.selectbox("Select a dataset to view or delete:", data)
+    selected_dataset_name = st.selectbox(
+        "Select a dataset to view or delete:", data
+    )
     selected = next(
-        dataset for dataset in datasets if dataset.name == selected_dataset_name
+        dataset for dataset in datasets
+        if dataset.name == selected_dataset_name
     )
 
     if selected_dataset_name:
@@ -56,14 +61,17 @@ if datasets:
             )
 
             input_features = st.multiselect(
-                "Select Input Features", feature_names, default=feature_names[:-1]
+                "Select Input Features", feature_names,
+                default=feature_names[:-1]
             )
             target_feature = st.selectbox(
-                "Select Target Feature", feature_names, index=len(feature_names) - 1
+                "Select Target Feature", feature_names,
+                index=len(feature_names) - 1
             )
 
             target_feature_type = next(
-                (f.feature_type for f in features if f.name == target_feature), None
+                (f.feature_type for f in features if f.name == target_feature),
+                None
             )
             if target_feature_type == "categorical":
                 task_type = "classification"
@@ -85,7 +93,9 @@ if datasets:
             )
 
             st.subheader("Model Selection")
-            write_helper_text("Select a model compatible with your detected task type.")
+            write_helper_text(
+                "Select a model compatible with your detected task type."
+            )
             selected_model = st.selectbox("Available Models", available_models)
 
             st.subheader("Select Dataset Split")
@@ -114,11 +124,14 @@ if datasets:
                 """
             )
             selected_metrics = st.multiselect(
-                "Available Metrics", available_metrics, default=available_metrics[1]
+                "Available Metrics", available_metrics,
+                default=available_metrics[1]
             )
 
             st.subheader("Pipeline Summary")
-            write_helper_text("Review your pipeline configuration before proceeding.")
+            write_helper_text(
+                "Review your pipeline configuration before proceeding."
+            )
 
             st.write("### Selected Configuration")
             st.markdown(f"**Dataset:** {selected_dataset.name}")
@@ -180,7 +193,10 @@ if datasets:
             st.subheader("Save Pipeline")
             st.write("Save the trained pipeline.")
             st.write(
-                "Note: Even if you didnt press the 'Train Pipeline' button, the saved pipeline will be trained anyways."
+                """
+                Note: Even if you didnt press the 'Train Pipeline'button,
+                the saved pipeline will be trained anyways.
+                """
             )
             pipeline_name = st.text_input("Enter Pipeline Name")
             if st.button("Save Pipeline"):
@@ -190,7 +206,9 @@ if datasets:
                 if not os.path.exists(pipeline_dir):
                     os.makedirs(pipeline_dir, exist_ok=True)
 
-                pipeline_path = os.path.join(pipeline_dir, f"{pipeline_name}.pkl")
+                pipeline_path = os.path.join(
+                    pipeline_dir, f"{pipeline_name}.pkl"
+                )
                 pipeline_artifact = Artifact(
                     name=pipeline_name,
                     type="assets/pipelines/pipeline",
@@ -199,9 +217,14 @@ if datasets:
                     metadata={
                         "model": str(pipeline._model.__class__.__name__),
                         "metrics": str(
-                            [metric.__class__.__name__ for metric in pipeline._metrics]
+                            [
+                                metric.__class__.__name__
+                                for metric in pipeline._metrics
+                            ]
                         ),
-                        "metrics results": str(list(pipeline._metrics_results)),
+                        "metrics results": str(
+                            list(pipeline._metrics_results)
+                        ),
                         "predictions": str(pipeline._predictions),
                         "target_feature": pipeline._target_feature.name,
                     },
@@ -210,7 +233,9 @@ if datasets:
                 try:
                     with open(pipeline_path, "wb") as f:
                         dump(pipeline_result, f, protocol=5)
-                    st.success(f"Pipeline '{pipeline_name}' saved successfully.")
+                    st.success(
+                        f"Pipeline '{pipeline_name}' saved successfully."
+                    )
                 except Exception as e:
                     st.error(f"Failed to save pipeline: {e}")
 
@@ -218,4 +243,3 @@ if datasets:
             st.error("Dataset not found.")
 else:
     st.write("No datasets available in the registry.")
-

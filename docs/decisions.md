@@ -268,3 +268,33 @@
 # Limitations: Slower for large datasets due to O(n) complexity for each prediction.
 # Alternatives: Use Scikit-Learn's KNeighborsClassifier.
 # Location: docs/decisions/DSC-0025-implement-KNN-manually.md
+
+# DSC-0026: Implement Random Forest Classifier Using Scikit-Learn
+# Date: 2024-11-08
+# Decision: Use scikit-learn's RandomForestClassifier to enable classification tasks.
+# Status: Accepted
+# Motivation: Provides a powerful ensemble learning method with easy implementation.
+# Reason: The built-in RandomForestClassifier has optimized performance and parameter tuning capabilities.
+# Limitations: May be computationally expensive for large datasets due to multiple decision trees.
+# Alternatives: Implement custom random forest logic or use alternative ensemble models.
+# Location: docs/decisions/DSC-0026-use-random-forest-classifier.md
+
+# DSC-0027: Streamlit Interface for Dataset Management
+# Date: 2024-11-08
+# Decision: Use Streamlit to manage datasets within AutoMLSystem's registry.
+# Status: Accepted
+# Motivation: Enables an interactive UI for viewing, uploading, and deleting datasets.
+# Reason: Streamlit offers an easy-to-use interface for non-technical users.
+# Limitations: Requires a Streamlit-compatible environment; not suitable for headless servers.
+# Alternatives: Use a command-line interface (CLI) or a standalone web app.
+# Location: docs/decisions/DSC-0027-streamlit-dataset-management.md
+
+# DSC-0028: Singleton Pattern for AutoML System
+# Date: 2024-11-09
+# Decision: Use singleton pattern for the AutoMLSystem class to ensure a single shared instance.
+# Status: Accepted
+# Motivation: Avoid multiple instances of AutoMLSystem which may lead to inconsistent state.
+# Reason: Singleton enforces a single source of truth within the system.
+# Limitations: Limits flexibility in testing environments where multiple instances may be useful.
+# Alternatives: Use dependency injection to manage instances.
+# Location: docs/decisions/DSC-0028-automlsystem-singleton.md

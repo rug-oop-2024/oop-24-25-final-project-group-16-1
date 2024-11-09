@@ -8,7 +8,8 @@ st.set_page_config(page_title="Pipeline Deployment", page_icon="🚀")
 st.write("# 🚀 Pipeline Deployment")
 st.write(
     """
-    Here you can view all saved machine learning pipelines and deploy them if needed.
+    Here you can view all saved machine learning
+    pipelines and deploy them if needed.
     Select a pipeline to see its configuration and metrics.
     """
 )
@@ -31,7 +32,8 @@ if pipelines:
 
     st.subheader("Make predictions")
     st.write(
-        "Upload a CSV file with data similar as the pipeline" "to make new predictions."
+        "Upload a CSV file with data similar as the pipeline"
+        "to make new predictions."
     )
 
     uploaded_file = st.file_uploader("Choose a file")
@@ -54,4 +56,3 @@ if pipelines:
 
 else:
     st.write("No saved pipelines found.")
-
