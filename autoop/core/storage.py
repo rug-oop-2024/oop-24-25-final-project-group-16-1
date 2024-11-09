@@ -62,7 +62,6 @@ class LocalStorage(Storage):
 
     def save(self, data: bytes, key: str):
         path = self._join_path(key)
-        # Ensure parent directories are created
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "wb") as f:
             f.write(data)
@@ -81,7 +80,6 @@ class LocalStorage(Storage):
     def list(self, prefix: str = "/") -> List[str]:
         path = self._join_path(prefix)
         self._assert_path_exists(path)
-        # Use os.path.join for compatibility across platforms
         keys = glob(os.path.join(path, "**", "*"), recursive=True)
         return [
             os.path.relpath(
@@ -94,5 +92,4 @@ class LocalStorage(Storage):
             raise NotFoundError(path)
 
     def _join_path(self, path: str) -> str:
-        # Ensure paths are OS-agnostic
         return os.path.normpath(os.path.join(self._base_path, path))

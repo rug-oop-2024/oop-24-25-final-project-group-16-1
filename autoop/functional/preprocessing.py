@@ -8,13 +8,18 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 def preprocess_features(
     features: List[Feature], dataset: Dataset
 ) -> List[Tuple[str, np.ndarray, dict]]:
-    """Preprocess features.
+    """
+    Preprocesses features by encoding categorical and scaling numeric data.
+
     Args:
-        features (List[Feature]): List of features.
-        dataset (Dataset): Dataset object.
+        features (List[Feature]): List of features to preprocess.
+        dataset (Dataset): Dataset object containing raw data.
+
     Returns:
-        List[Tuple[str, np.ndarray, dict]]: List of preprocessed features.
-        Each ndarray of shape (N, ...).
+        List[Tuple[str, np.ndarray, dict]]: A list of tuples, each containing:
+            - feature name (str)
+            - preprocessed data as a NumPy array
+            - artifact dictionary with encoder/scaler metadata
     """
     results = []
     raw = dataset.read()
@@ -24,22 +29,25 @@ def preprocess_features(
             encoder = OneHotEncoder()
             data = encoder.fit_transform(
                 raw[feature.name].values.reshape(-1, 1)
-            ).toarray()
-            artifact = {"type": "OneHotEncoder", "encoder": encoder.get_params()}
-            results.append((feature.name, data, artifact))
+            )
+            artifact = {
+                "type": "OneHotEncoder", "encoder": encoder.get_params()
+            }
+            results.append((feature.name, data.toarray(), artifact))
         elif feature.feature_type in ["numeric", "numerical"]:
             scaler = StandardScaler()
-            data = scaler.fit_transform(raw[feature.name].values.reshape(-1, 1))
-            artifact = {"type": "StandardScaler", "scaler": scaler.get_params()}
+            data = scaler.fit_transform(
+                raw[feature.name].values.reshape(-1, 1)
+            )
+            artifact = {
+                "type": "StandardScaler", "scaler": scaler.get_params()
+            }
             results.append((feature.name, data, artifact))
         else:
             raise ValueError(
-                f"""
-                Unsupported feature type:
-                {feature.feature_type} for feature {feature.name}
-            """
+                f"Unsupported feature type: {feature.feature_type} "
+                f"for feature {feature.name}"
             )
 
-    # Sort for consistency
-    results = list(sorted(results, key=lambda x: x[0]))
+    results = sorted(results, key=lambda x: x[0])
     return results

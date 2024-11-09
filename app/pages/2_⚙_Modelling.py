@@ -1,6 +1,8 @@
+import os
+from pickle import dump
 import streamlit as st
-import pandas as pd
 from app.core.system import AutoMLSystem
+from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.metric import METRICS, get_metric
 from autoop.core.ml.model import CLASSIFICATION_MODELS, REGRESSION_MODELS, get_model
 from autoop.core.ml.pipeline import Pipeline
@@ -30,7 +32,6 @@ write_helper_text(
 
 if datasets:
     data = [dataset.name for dataset in datasets]
-    df = pd.DataFrame(data)
     selected_dataset_name = st.selectbox("Select a dataset to view or delete:", data)
     selected = next(
         dataset for dataset in datasets if dataset.name == selected_dataset_name
@@ -112,7 +113,9 @@ if datasets:
                 evaluate your model's performance.
                 """
             )
-            selected_metric = st.selectbox("Available Metric", available_metrics)
+            selected_metrics = st.multiselect(
+                "Available Metrics", available_metrics, default=available_metrics[1]
+            )
 
             st.subheader("Pipeline Summary")
             write_helper_text("Review your pipeline configuration before proceeding.")
@@ -124,72 +127,95 @@ if datasets:
             st.markdown(f"**Task Type:** {task_type}")
             st.markdown(f"**Model:** {selected_model}")
             st.markdown(f"**Training Split:** {split_ratio * 100:.0f}%")
-            st.markdown(f"**Metrics:** {selected_metric}")
+            st.markdown(f"**Metrics:** {', '.join(selected_metrics)}")
+            model = get_model(selected_model)
+            metrics = [get_metric(metric) for metric in selected_metrics]
+
+            input_f = [f for f in features if f.name in input_features]
+            target_f = next(f for f in features if f.name == target_feature)
+            pipeline = Pipeline(
+                metrics=metrics,
+                dataset=selected_dataset,
+                model=model,
+                input_features=input_f,
+                target_feature=target_f,
+                split=split_ratio,
+            )
 
             if st.button("Train Pipeline"):
                 st.write("### Training in Progress")
-                model = get_model(selected_model)
-                metric = get_metric(selected_metric)
-
-                input_f = [f for f in features if f.name in input_features]
-                target_f = next(f for f in features if f.name == target_feature)
-
-                pipeline = Pipeline(
-                    metrics=metric,
-                    dataset=selected_dataset,
-                    model=model,
-                    input_features=input_f,
-                    target_feature=target_f,
-                    split=split_ratio,
-                )
-                if selected_model == "Logistic Regression":
-                    preprocessed_pipeline = pipeline._preprocess_features()
-                    if preprocessed_pipeline:
-                        pipeline_result = preprocessed_pipeline.execute()
-                    else:
-                        st.error("Preprocessing failed.")
-                else:
+                try:
                     pipeline_result = pipeline.execute()
+                    st.success("Pipeline trained successfully!")
 
-                st.success("Pipeline trained successfully!")
-                st.write("### Training Results")
-                write_helper_text("Scroll down if you want to save the pipeline.")
-                st.json(
-                    {
-                        "train_metrics": {
-                            metric.__class__.__name__: result
-                            for metric, result in pipeline_result["train_metrics"]
-                        },
-                        "test_metrics": {
-                            metric.__class__.__name__: result
-                            for metric, result in pipeline_result["test_metrics"]
-                        },
-                        "train_predictions": pipeline_result[
-                            "train_predictions"
-                        ].tolist(),
-                        "test_predictions": pipeline_result[
-                            "test_predictions"
-                        ].tolist(),
-                    }
-                )
-                if st.button("Save Pipeline"):
-                    st.write("### Saving pipeline...")
-                    pipeline_name = st.text_input(
-                        "Enter Pipeline Name", value=selected_dataset_name
+                    st.write("### Training Results")
+                    write_helper_text(
+                        "Press 'View Training Result' to expand the results."
                     )
 
-                    if pipeline_name:
-                        asset_path = f"artifacts/{pipeline_name}"
-                        pipeline.save()
+                    train_metrics = {
+                        metric.__class__.__name__: result
+                        for metric, result in pipeline_result["train_metrics"]
+                    }
+                    test_metrics = {
+                        metric.__class__.__name__: result
+                        for metric, result in pipeline_result["test_metrics"]
+                    }
+                    with st.expander("View Training Results"):
+                        st.json(
+                            {
+                                "train_metrics": train_metrics,
+                                "test_metrics": test_metrics,
+                                "train_predictions": pipeline_result[
+                                    "train_predictions"
+                                ].tolist(),
+                                "test_predictions": pipeline_result[
+                                    "test_predictions"
+                                ].tolist(),
+                            }
+                        )
+                except Exception as e:
+                    st.error(f"An error occurred during training: {e}")
 
-                        if st.button("Save Pipeline"):
-                            automl.registry.register(pipeline)
-                            st.success(
-                                f"Pipeline '{pipeline_name}' saved successfully!"
-                            )
-                            st.rerun()
+            st.subheader("Save Pipeline")
+            st.write("Save the trained pipeline.")
+            st.write(
+                "Note: Even if you didnt press the 'Train Pipeline' button, the saved pipeline will be trained anyways."
+            )
+            pipeline_name = st.text_input("Enter Pipeline Name")
+            if st.button("Save Pipeline"):
+                st.write("### Saving pipeline...")
+                pipeline_result = pipeline.execute()
+                pipeline_dir = "assets/pipelines"
+                if not os.path.exists(pipeline_dir):
+                    os.makedirs(pipeline_dir, exist_ok=True)
+
+                pipeline_path = os.path.join(pipeline_dir, f"{pipeline_name}.pkl")
+                pipeline_artifact = Artifact(
+                    name=pipeline_name,
+                    type="assets/pipelines/pipeline",
+                    asset_path=f"{pipeline_name}",
+                    data=pipeline._dataset.data,
+                    metadata={
+                        "model": str(pipeline._model.__class__.__name__),
+                        "metrics": str(
+                            [metric.__class__.__name__ for metric in pipeline._metrics]
+                        ),
+                        "metrics results": str(list(pipeline._metrics_results)),
+                        "predictions": str(pipeline._predictions),
+                        "target_feature": pipeline._target_feature.name,
+                    },
+                )
+                automl.registry.register(pipeline_artifact)
+                try:
+                    with open(pipeline_path, "wb") as f:
+                        dump(pipeline_result, f, protocol=5)
+                    st.success(f"Pipeline '{pipeline_name}' saved successfully.")
+                except Exception as e:
+                    st.error(f"Failed to save pipeline: {e}")
 
         else:
             st.error("Dataset not found.")
 else:
     st.write("No datasets available in the registry.")
+

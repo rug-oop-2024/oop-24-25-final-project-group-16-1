@@ -13,13 +13,14 @@ class LinearRegressionModel(Model):
         num_iterations: int = 10,
     ) -> None:
         """
-        Initializes the LinearRegressionModel with specified
+        Initializes the LinearRegressionModel with a determined
         learning rate and iteration count.
+
         Args:
-            learning_rate (float): The learning rate for gradient descent
-            updates.
-            num_iterations (int): The number of iterations
-            for gradient descent.
+            learning_rate (float): The learning rate for
+            gradient descent updates.
+            num_iterations (int): The number of
+            iterations for gradient descent.
         """
         super().__init__(name=name, type=type)
         self._learning_rate: float = learning_rate
@@ -30,17 +31,17 @@ class LinearRegressionModel(Model):
     def learning_rate(self) -> float:
         """
         Returns the current learning rate.
-        Returns:
-            float: The learning rate used in gradient descent.
         """
         return self._learning_rate
 
     @learning_rate.setter
     def learning_rate(self, rate: float) -> None:
         """
-        Sets a new learning rate value, ensuring it is positive.
+        Sets a new learning rate value where it ensures it is positive.
+
         Args:
             rate (float): The new learning rate value.
+
         Raises:
             ValueError: If the provided learning rate is not positive.
         """
@@ -52,8 +53,6 @@ class LinearRegressionModel(Model):
     def num_iterations(self) -> int:
         """
         Returns the number of iterations for training.
-        Returns:
-            int: The iteration count for gradient descent.
         """
         return self._num_iterations
 
@@ -62,8 +61,10 @@ class LinearRegressionModel(Model):
         """
         Sets the number of training iterations,
         ensuring it is a positive integer.
+
         Args:
             iterations (int): The new iteration count.
+
         Raises:
             ValueError: If the iteration count is not positive.
         """
@@ -75,9 +76,11 @@ class LinearRegressionModel(Model):
     def weights(self) -> Optional[np.ndarray]:
         """
         Returns the model's learned weights.
+
         Returns:
-            Optional[np.ndarray]: The weights if the model is trained,
-            else None.
+            Optional[np.ndarray]: The weights if the model
+            is trained, else None.
+
         Raises:
             ValueError: If accessed before the model is trained.
         """
@@ -90,21 +93,21 @@ class LinearRegressionModel(Model):
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Trains the linear regression model using gradient descent.
+
         Args:
             X (np.ndarray): Input feature matrix of shape
             (num_samples, num_features).
             y (np.ndarray): Target values of shape (num_samples,).
+
         Notes:
             Updates the model's weights using gradient descent.
         """
         y = y.flatten()
-
         num_samples, num_features = X.shape
         self._weights = np.zeros(num_features)
 
         for _ in range(self._num_iterations):
             y_pred = np.dot(X, self._weights)
-
             dw = (1 / num_samples) * np.dot(X.T, (y_pred - y))
 
             assert (
@@ -116,15 +119,20 @@ class LinearRegressionModel(Model):
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
         Predicts target values for the given input features.
+
         Args:
-            X (np.ndarray): Input feature matrix of shape
-            (num_samples, num_features).
+            X (np.ndarray): Input feature matrix
+            of shape (num_samples, num_features).
+
         Returns:
             np.ndarray: Predicted values of shape (num_samples,).
+
         Raises:
-            ValueError: If the model has not been trained
-            (i.e., weights are None).
+            ValueError: If the model has not
+            been trained (i.e., weights are None).
         """
         if self._weights is None:
-            raise ValueError("Model is not trained yet. Call fit to train the model.")
+            raise ValueError(
+                "Model is not trained yet. Call fit to train the model."
+            )
         return np.dot(X, self._weights)

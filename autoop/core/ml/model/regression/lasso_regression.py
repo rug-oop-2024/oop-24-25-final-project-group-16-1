@@ -11,11 +11,12 @@ class Lasso(Model):
         """
         Initializes the Lasso model with a specified name and
         regularization strength.
+
         Args:
             name (str): The name identifier for the model instance.
-            alpha (float): The regularization strength, which controls
-            the amount of penalty applied to the model coefficients;
-            must be positive.
+            alpha (float): The regularization strength,
+            which controls the amount of penalty applied to the model
+            coefficients; must be positive.
         """
         super().__init__(name=name, type=type)
         self._alpha: float = alpha
@@ -26,6 +27,7 @@ class Lasso(Model):
     def alpha(self) -> float:
         """
         Retrieves the regularization strength (alpha) of the model.
+
         Returns:
             float: The current value of alpha, which controls regularization.
         """
@@ -36,8 +38,10 @@ class Lasso(Model):
         """
         Sets a new value for the regularization strength (alpha)
         and updates the model.
+
         Args:
             value (float): The new alpha value, which must be positive.
+
         Raises:
             ValueError: If the provided alpha value is not positive.
         """
@@ -49,8 +53,9 @@ class Lasso(Model):
     @property
     def parameters(self) -> Dict[str, Any]:
         """
-        Retrieves the model parameters, including weights and intercept,
-        if fitted.
+        Retrieves the model parameters, including weights
+        and intercept, if fitted.
+
         Returns:
             Dict[str, Any]: A dictionary containing model parameters.
                 Keys include 'weights' and 'intercept' after fitting.
@@ -60,14 +65,16 @@ class Lasso(Model):
     def fit(self, X: np.ndarray, ground_truth: np.ndarray) -> None:
         """
         Trains the Lasso model on provided features and target values.
+
         Args:
             X (np.ndarray): The input feature matrix with shape
             (n_samples, n_features).
-            ground_truth (np.ndarray): The target values for training with
-            shape (n_samples,).
+            ground_truth (np.ndarray): The target values for
+            training with shape (n_samples,).
+
         Notes:
-            Updates the `_parameters` dictionary to store the model's weights
-            and intercept
+            Updates the `_parameters` dictionary to store the model's
+            weights and intercept
             after fitting.
         """
         self._model.fit(X, ground_truth)
@@ -78,9 +85,11 @@ class Lasso(Model):
         """
         Predicts target values based on the input features
         using the trained model.
+
         Args:
             X (np.ndarray): The input feature matrix with
-        shape (n_samples, n_features).
+            shape (n_samples, n_features).
+
         Returns:
             np.ndarray: The predicted target values with shape (n_samples,).
         """

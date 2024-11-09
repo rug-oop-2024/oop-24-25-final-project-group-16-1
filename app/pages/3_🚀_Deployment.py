@@ -1,5 +1,7 @@
+import pandas as pd
 import streamlit as st
 from app.core.system import AutoMLSystem
+from autoop.core.ml.dataset import Dataset
 
 st.set_page_config(page_title="Pipeline Deployment", page_icon="🚀")
 
@@ -24,8 +26,26 @@ if pipelines:
 
     if st.button("View Pipeline"):
         pipeline = selected.read()
-        st.write(f"### Pipeline: {selected.name}")
-        st.dataframe(pipeline)
+        st.write(f"### You selected this Pipeline: {selected.name}")
+        st.write(pipeline)
+
+    st.subheader("Make predictions")
+    st.write(
+        "Upload a CSV file with data similar as the pipeline" "to make new predictions."
+    )
+
+    uploaded_file = st.file_uploader("Choose a file")
+
+    if uploaded_file is not None:
+        data = pd.read_csv(uploaded_file)
+        pipeline._dataset = Dataset.from_dataframe(
+            data=data,
+            name=selected.name,
+            asset_path=selected.asset_path,
+            version=selected.version,
+        )
+        predictions = pipeline.execute()
+        st.write(predictions)
 
     if st.button("Delete Pipeline"):
         automl.registry.delete(selected.id)
@@ -34,3 +54,4 @@ if pipelines:
 
 else:
     st.write("No saved pipelines found.")
+

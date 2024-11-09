@@ -12,10 +12,13 @@ class KNearestNeighbors(Model):
         name: str = "K-Nearest Neighbors",
         type: str = "classification",
     ) -> None:
-        """Initializes the KNearestNeighbors model.
+        """
+        Initializes the KNearestNeighbors model with a specified number of neighbors.
+        
         Args:
             k (int): The number of nearest neighbors to consider.
-            type (str): The type of artifact, defaults to "model".
+            name (str): The name of the model instance.
+            type (str): The type of artifact, default is "classification".
         """
         super().__init__(name=name, type=type)
         self.k = k
@@ -25,14 +28,22 @@ class KNearestNeighbors(Model):
 
     @property
     def parameters(self) -> dict:
-        """Gets the parameters of the model."""
+        """
+        Retrieves the parameters of the model.
+        
+        Returns:
+            dict: A dictionary of model parameters.
+        """
         return deepcopy(self._parameters)
 
     @parameters.setter
     def parameters(self, value: dict) -> None:
-        """Sets the parameters of the model.
+        """
+        Sets the parameters of the model.
+        
         Args:
             value (dict): A dictionary of parameters.
+        
         Raises:
             ValueError: If the provided value is not a dictionary.
         """
@@ -41,30 +52,38 @@ class KNearestNeighbors(Model):
         self._parameters = value
 
     def fit(self, observations: np.ndarray, ground_truth: np.ndarray) -> None:
-        """Trains the model with the provided observations and ground truth.
+        """
+        Trains the model with the provided
+        observations and ground truth labels.
+
         Args:
-            observations (np.ndarray): The input features.
-            ground_truth (np.ndarray): The true labels corresponding
-                                       to the observations.
+            observations (np.ndarray): The input feature matrix with shape (n_samples, n_features).
+            ground_truth (np.ndarray): The true labels corresponding to the observations.
         """
         self.observations = observations
         self.ground_truth = ground_truth
         self._parameters = {"observations": observations, "ground_truth": ground_truth}
 
     def predict(self, observations: np.ndarray) -> np.ndarray:
-        """Predicts labels for the given observations.
+        """
+        Predicts labels for the given observations.
+
         Args:
-            observations (np.ndarray): The input features.
+            observations (np.ndarray): The input feature matrix to predict, with shape (n_samples, n_features).
+
         Returns:
-            np.ndarray: The predicted labels.
+            np.ndarray: The predicted labels as a 1D array.
         """
         predictions = [self._predict_single(x) for x in observations]
         return np.array(predictions)
 
     def _predict_single(self, observation: np.ndarray) -> Any:
-        """Predicts the label for a single observation.
+        """
+        Predicts the label for a single observation by finding the most common label among the k nearest neighbors.
+
         Args:
-            observation (np.ndarray): A single input feature.
+            observation (np.ndarray): A single input feature array with shape (n_features,).
+
         Returns:
             Any: The predicted label for the observation.
         """
