@@ -48,8 +48,8 @@ class Pipeline:
         self._split = split
 
         if (
-            target_feature.feature_type == "categorical"
-            and model.type != "classification"
+            target_feature.feature_type == "categorical" and
+                model.type != "classification"
         ):
             raise ValueError(
                 """
@@ -58,8 +58,8 @@ class Pipeline:
                 """
             )
         if (
-            target_feature.feature_type == "numeric"
-                and model.type != "regression"):
+            target_feature.feature_type == "numeric" and
+                model.type != "regression"):
             raise ValueError(
                 "Model type must be regression for numerical target feature"
             )
