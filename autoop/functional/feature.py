@@ -19,9 +19,9 @@ def detect_feature_types(dataset: Dataset) -> List[Feature]:
     df = dataset.read()
 
     for column in df.columns:
-        if (
-            pd.api.types.is_integer_dtype(df[column])
-            or pd.api.types.is_float_dtype(df[column])
+        if pd.api.types.is_integer_dtype(
+            df[column]) or pd.api.types.is_float_dtype(
+            df[column]
         ):
             feature_type = "numeric"
         else:

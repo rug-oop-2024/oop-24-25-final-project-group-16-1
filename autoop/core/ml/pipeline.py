@@ -17,6 +17,7 @@ class Pipeline:
     a machine learning workflow, including data preprocessing,
     model training, and evaluation.
     """
+
     def __init__(
         self,
         metrics: List[Metric],
@@ -47,8 +48,8 @@ class Pipeline:
         self._split = split
 
         if (
-            target_feature.feature_type == "categorical" and
-            model.type != "classification"
+            target_feature.feature_type == "categorical"
+            and model.type != "classification"
         ):
             raise ValueError(
                 """
@@ -57,9 +58,8 @@ class Pipeline:
                 """
             )
         if (
-            target_feature.feature_type == "numeric" and
-            model.type != "regression"
-        ):
+            target_feature.feature_type == "numeric"
+                and model.type != "regression"):
             raise ValueError(
                 "Model type must be regression for numerical target feature"
             )
@@ -171,12 +171,14 @@ class Pipeline:
             )
 
         self._train_X = [
-            vector[: int(split * len(vector))]
-            for vector in self._input_vectors
+            vector[
+                : int(split * len(vector))
+            ] for vector in self._input_vectors
         ]
         self._test_X = [
-            vector[int(split * len(vector)):]
-            for vector in self._input_vectors
+            vector[
+                int(split * len(vector)):
+            ] for vector in self._input_vectors
         ]
         self._train_y = self._output_vector[
             : int(split * len(self._output_vector))
