@@ -1,5 +1,4 @@
 import os
-from pickle import dump
 import streamlit as st
 from app.core.system import AutoMLSystem
 from autoop.core.ml.artifact import Artifact
@@ -13,7 +12,7 @@ from autoop.functional.feature import detect_feature_types
 st.set_page_config(page_title="Modelling", page_icon="📈")
 
 
-def write_helper_text(text: str) -> None:
+def write_helper_text(text: str):
     """
     Display helper text in a lighter color in the Streamlit app.
 
@@ -44,8 +43,8 @@ if datasets:
         "Select a dataset to view or delete:", data
     )
     selected = next(
-        dataset for dataset in datasets
-        if dataset.name == selected_dataset_name
+        dataset for dataset in datasets if
+        dataset.name == selected_dataset_name
     )
 
     if selected_dataset_name:
@@ -108,16 +107,19 @@ if datasets:
             write_helper_text(
                 """
                 Choose the proportion of data to use for
-                training " "and testing.
+                training and testing.
                 """
             )
-            split_ratio = st.slider(
-                "Training Data Split (%)",
-                min_value=0,
-                max_value=100,
-                value=50,
-                step=5,
-            ) / 100.0
+            split_ratio = (
+                st.slider(
+                    "Training Data Split (%)",
+                    min_value=0,
+                    max_value=100,
+                    value=50,
+                    step=5,
+                )
+                / 100.0
+            )
 
             st.subheader("Select Metrics")
             write_helper_text(
@@ -198,13 +200,21 @@ if datasets:
             st.write(
                 """
                 Note: Even if you didn't press the 'Train Pipeline' button,
-                the saved pipeline will be trained anyway.
+                the saved pipeline will be trained anyways.
                 """
             )
             pipeline_name = st.text_input("Enter Pipeline Name")
             if st.button("Save Pipeline"):
                 st.write("### Saving pipeline...")
                 pipeline_result = pipeline.execute()
+                train_metrics = {
+                    metric.__class__.__name__: result
+                    for metric, result in pipeline_result["train_metrics"]
+                }
+                test_metrics = {
+                    metric.__class__.__name__: result
+                    for metric, result in pipeline_result["test_metrics"]
+                }
                 pipeline_dir = "assets/pipelines"
                 if not os.path.exists(pipeline_dir):
                     os.makedirs(pipeline_dir, exist_ok=True)
@@ -214,33 +224,30 @@ if datasets:
                 )
                 pipeline_artifact = Artifact(
                     name=pipeline_name,
-                    type="assets/pipelines/pipeline",
-                    asset_path=f"{pipeline_name}",
-                    data=pipeline._dataset.data,
+                    type="pipeline",
+                    asset_path=f"pipeline/{pipeline_name}.pkl",
+                    data=pipeline_result,
                     metadata={
-                        "model": str(pipeline._model.__class__.__name__),
-                        "metrics": str(
-                            [
-                                metric.__class__.__name__
-                                for metric in pipeline._metrics
-                            ]
-                        ),
-                        "metrics results": str(
-                            list(pipeline._metrics_results)
-                        ),
-                        "predictions": str(pipeline._predictions),
+                        "model": pipeline._model.__class__.__name__,
+                        "task_type": task_type,
+                        "metrics": [
+                            metric.__class__.__name__ for
+                            metric in pipeline._metrics
+                        ],
+                        "train_metrics": train_metrics,
+                        "test_metrics": test_metrics,
                         "target_feature": pipeline._target_feature.name,
+                        "input_features": [
+                            f.name for f in pipeline._input_features
+                        ],
+                        "split_ratio": split_ratio,
                     },
                 )
-                automl.registry.register(pipeline_artifact)
+
                 try:
-                    with open(pipeline_path, "wb") as f:
-                        dump(pipeline_result, f, protocol=5)
-                    st.success(
-                        f"Pipeline '{pipeline_name}' saved successfully."
-                    )
+                    automl.registry.register(pipeline_artifact)
                 except Exception as e:
-                    st.error(f"Failed to save pipeline: {e}")
+                    st.error(f"Failed to save and register pipeline: {e}")
 
         else:
             st.error("Dataset not found.")

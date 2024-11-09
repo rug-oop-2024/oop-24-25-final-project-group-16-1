@@ -1,6 +1,10 @@
-from autoop.core.storage import LocalStorage, Storage
+import os
+import pickle
+import streamlit as st
+from autoop.core.storage import LocalStorage
 from autoop.core.database import Database
 from autoop.core.ml.artifact import Artifact
+from autoop.core.storage import Storage
 from typing import List
 
 
@@ -28,7 +32,21 @@ class ArtifactRegistry:
         Args:
             artifact (Artifact): The artifact to register.
         """
-        self._storage.save(artifact.data, artifact.asset_path)
+        if artifact.type == "pipeline":
+            try:
+                pipeline_dir = "assets/pipelines"
+                pipeline_path = os.path.join(
+                    pipeline_dir, f"{artifact.name}.pkl"
+                )
+                with open(pipeline_path, "wb") as f:
+                    pickle.dump(artifact.data, f, protocol=5)
+                st.success(f"Pipeline '{artifact.name}' saved successfully.")
+            except Exception as e:
+                st.error(f"Failed to save pipeline: {e}")
+        elif artifact.type == "dataset":
+            self._storage.save(artifact.data, artifact.asset_path)
+            st.success(f"Dataset '{artifact.name}' saved successfully.")
+
         entry = {
             "name": artifact.name,
             "version": artifact.version,
