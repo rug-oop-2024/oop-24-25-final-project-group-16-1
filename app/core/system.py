@@ -38,8 +38,16 @@ class ArtifactRegistry:
                 pipeline_path = os.path.join(
                     pipeline_dir, f"{artifact.name}.pkl"
                 )
+                pipeline_data = {
+                    "name": artifact.name,
+                    "version": artifact.version,
+                    "asset_path": artifact.asset_path,
+                    "tags": artifact.tags,
+                    "metadata": artifact.metadata,
+                    "type": artifact.type,
+                }
                 with open(pipeline_path, "wb") as f:
-                    pickle.dump(artifact.data, f, protocol=5)
+                    pickle.dump(pipeline_data, f, protocol=5)
                 st.success(f"Pipeline '{artifact.name}' saved successfully.")
             except Exception as e:
                 st.error(f"Failed to save pipeline: {e}")

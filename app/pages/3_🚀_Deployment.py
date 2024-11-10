@@ -2,7 +2,12 @@ import os
 from pickle import load
 import pandas as pd
 import streamlit as st
+from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
+from autoop.core.ml.feature import Feature
+from autoop.core.ml.metric import get_metric
+from autoop.core.ml.model import CLASSIFICATION_MODELS, get_model
+from autoop.core.ml.pipeline import Pipeline
 
 st.set_page_config(page_title="Pipeline Deployment", page_icon="🚀")
 
@@ -26,9 +31,50 @@ if pipeline_files:
 
     with open(selected_file, "rb") as f:
         selected_pipeline = load(f)
+    
+    if isinstance(selected_pipeline, dict):
+        st.write("Here's its content:")
 
-    with st.expander("View Training Results"):
-        st.write(selected_pipeline)
+        metadata = selected_pipeline.get("metadata", {})    
+        metrics_name = metadata["metrics"]
+        reverse_metric_map = {
+            "MeanSquaredError": "mean_squared_error",
+            "MeanAbsoluteError": "mean_absolute_error",
+            "R2Score": "r2_score",
+            "Accuracy": "accuracy",
+            "Precision": "precision",
+            "Recall": "recall",
+        }
+        metrics = [get_metric(reverse_metric_map.get(f, f)) for f in metrics_name]
+        model_name = metadata["model"]
+        reverse_model_map = {
+            "DecisionTreeModel": "Decision Trees",
+            "KNearestNeighbors": "K-Nearest Neighbors",
+            "RandomForestModel": "Random Forest",
+            "Lasso": "Lasso Regression",
+            "LinearRegressionModel": "Linear Regression",
+            "MultipleLinearRegression": "Multiple Linear Regression"
+        }
+        model = get_model(reverse_model_map.get(model_name))
+        input_features = metadata["input_features"]
+        target_feature = metadata["target_feature"]
+        split = metadata["split_ratio"]
+
+        with st.expander("View Pipeline Summary"):
+            st.write(f"Metrics: {', '.join(metrics_name)}")
+            st.write(f"Model: {model_name}")
+            st.write(f"Input Features: {', '.join(input_features)}")
+            st.write(f"Target Feature: {target_feature}")
+            st.write(f"Split Ratio: {split}")
+
+        input_features_wrapped = [
+            Feature(name=f, feature_type=("numerical" if f != target_feature else "categorical"), values=[])
+            for f in input_features
+        ]
+        if model_name in CLASSIFICATION_MODELS:
+            target_feature_wrapped = Feature(name=target_feature, feature_type="categorical", values=[])
+        else:
+            target_feature_wrapped = Feature(name=target_feature, feature_type="numerical", values=[])
 
     st.subheader("Make predictions")
     st.write(
@@ -45,21 +91,29 @@ if pipeline_files:
 
         dataset_name = st.text_input("Enter dataset name")
         if dataset_name:
-            asset_path = f"dataset/{dataset_name}.cvs"
+            asset_path = f"dataset/{dataset_name}.csv"
 
             new_dataset = Dataset.from_dataframe(
                 data=data, name=dataset_name, asset_path=asset_path,
                 version="1.0.0"
             )
-
+            selected_pipeline = Pipeline(
+                metrics=metrics,
+                dataset=new_dataset,
+                model=model,
+                input_features=input_features_wrapped,
+                target_feature=target_feature_wrapped,
+                split=split,
+            )
             predictions = selected_pipeline.execute()
             with st.expander("View New Training Results"):
                 st.write(predictions)
 
-    if st.button("Delete Pipeline"):
-        os.remove(selected_file)
-        st.success(f"Pipeline '{selected_name}' deleted successfully.")
-        st.rerun()
+    #if st.button("Delete Pipeline"):
+    #    AutoMLSystem.get_instance().registry.delete(f"{selected_name}_1.0.0")
+    #    os.remove(selected_file)
+    #    st.success(f"Pipeline '{selected_name}' deleted successfully.")
+    #    st.rerun()  
 
 else:
     st.write("No saved pipelines found.")

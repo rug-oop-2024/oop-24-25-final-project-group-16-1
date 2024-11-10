@@ -1,7 +1,5 @@
 from typing import List
 import pickle
-import json
-from app.core.system import AutoMLSystem
 from autoop.core.ml.artifact import Artifact
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.model import Model
@@ -224,7 +222,7 @@ class Pipeline:
         metrics_results = []
         for metric in self._metrics:
             result = metric.evaluate(predictions, Y)
-            metrics_results.append((metric, result))
+            metrics_results.append(metric, result)
 
         self._metrics_results = metrics_results
         return metrics_results, predictions
@@ -258,52 +256,3 @@ class Pipeline:
             "train_predictions": train_predictions,
             "test_predictions": test_predictions,
         }
-
-    def save(self):
-        """
-        Saves the pipeline.
-        Serializes the pipeline object and dataset to bytes, then stores it
-        in the registry.
-        """
-        pipeline_bytes = pickle.dumps(self)
-        dataset_bytes = json.dumps(self._dataset).encode()
-
-        automl = AutoMLSystem.get_instance()
-        pipeline_id = f"{self._dataset['name']}_pipeline.pkl"
-        dataset_id = f"{self._dataset['name']}_dataset.json"
-
-        automl.registry.save_data(
-            pipeline_bytes, type="pipeline", name=pipeline_id
-        )
-        automl.registry.save_data(
-            dataset_bytes, type="dataset", name=dataset_id
-        )
-
-        print(
-            f"Pipeline saved successfully with name: {self._dataset['name']}"
-        )
-
-    @staticmethod
-    def load(name: str):
-        """
-        Loads a saved pipeline by name.
-
-        Args:
-            name (str): The name of the pipeline to load.
-
-        Returns:
-            Pipeline: The loaded pipeline object.
-        """
-        automl = AutoMLSystem.get_instance()
-        pipeline_id = f"{name}_pipeline.pkl"
-        dataset_id = f"{name}_dataset.json"
-
-        pipeline_bytes = automl.registry.get_data(pipeline_id)
-        dataset_bytes = automl.registry.get_data(dataset_id)
-
-        pipeline = pickle.loads(pipeline_bytes)
-        dataset = json.loads(dataset_bytes.decode())
-
-        pipeline._dataset = dataset
-
-        return pipeline
