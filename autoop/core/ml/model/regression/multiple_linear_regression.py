@@ -13,12 +13,11 @@ class MultipleLinearRegression(Model):
     descent optimization.
 
     Attributes:
-        name (str): The name identifier for the model.
-        type (str): Type of model, default is "regression".
-        learning_rate (float): The step size for gradient descent.
-        num_iterations (int): The number of gradient descent iterations.
-        parameters (dict): The trained weights after model fitting.
+        _parameters (dict): The trained weights after model fitting.
+        _model (LinearRegressionModel): Instance of LinearRegressionModel
+        used for training.
     """
+
     def __init__(
         self,
         name: str = "Multiple Linear Regression",

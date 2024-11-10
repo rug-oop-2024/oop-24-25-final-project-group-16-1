@@ -11,6 +11,7 @@ class KNearestNeighbors(Model):
     assigns a label to each observation based on the most common label among
     its k nearest neighbors in the training dataset.
     """
+
     def __init__(
         self,
         k: int = 3,
@@ -27,10 +28,35 @@ class KNearestNeighbors(Model):
             type (str): The type of artifact, default is "classification".
         """
         super().__init__(name=name, type=type)
-        self.k = k
-        self.observations = None
-        self.ground_truth = None
+        self._k = k
+        self._observations = None
+        self._ground_truth = None
         self._parameters = {}
+
+    @property
+    def k(self) -> int:
+        """
+        Retrieves the number of neighbors used by the model.
+
+        Returns:
+            int: The number of nearest neighbors (k).
+        """
+        return self._k
+
+    @k.setter
+    def k(self, value: int) -> None:
+        """
+        Sets the number of neighbors for the model.
+
+        Args:
+            value (int): The new value for k.
+
+        Raises:
+            ValueError: If k is not a positive integer.
+        """
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("k must be a positive integer.")
+        self._k = value
 
     @property
     def parameters(self) -> dict:
@@ -68,8 +94,8 @@ class KNearestNeighbors(Model):
             ground_truth (np.ndarray): The true labels corresponding
             to the observations.
         """
-        self.observations = observations
-        self.ground_truth = ground_truth
+        self._observations = observations
+        self._ground_truth = ground_truth
         self._parameters = {
             "observations": observations, "ground_truth": ground_truth
         }
@@ -100,11 +126,11 @@ class KNearestNeighbors(Model):
         Returns:
             Any: The predicted label for the observation.
         """
-        module = observation - self._parameters["observations"]
+        module = observation - self._observations
         distances = np.linalg.norm(module, axis=1)
-        k_indices = np.argsort(distances)[: self.k]
+        k_indices = np.argsort(distances)[: self._k]
         k_nearest_labels = [
-            self._parameters["ground_truth"][i] for i in k_indices
+            self._ground_truth[i] for i in k_indices
         ]
         most_common = pd.Series(k_nearest_labels).value_counts()
         return most_common.index[0]

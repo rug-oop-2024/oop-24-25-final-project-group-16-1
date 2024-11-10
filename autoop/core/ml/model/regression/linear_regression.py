@@ -10,9 +10,10 @@ class LinearRegressionModel(Model):
     for training.
 
     Attributes:
-        learning_rate (float): The step size for each gradient descent update.
-        num_iterations (int): Number of iterations to run the gradient descent.
-        weights (Optional[np.ndarray]): The model parameters (weights),
+        _learning_rate (float): The step size for each gradient descent update.
+        _num_iterations (int): Number of iterations to run the
+        gradient descent.
+        _weights (Optional[np.ndarray]): The model parameters (weights),
         updated after training.
     """
     def __init__(

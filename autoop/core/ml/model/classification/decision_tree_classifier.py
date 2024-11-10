@@ -8,8 +8,9 @@ class DecisionTreeModel(Model):
     A decision tree model that uses Scikit-Learn's
     DecisionTreeClassifier for classification tasks.
     """
+
     def __init__(
-            self, name: str = "Decision Trees", type: str = "classification"
+        self, name: str = "Decision Trees", type: str = "classification"
     ) -> None:
         """
         Initializes the DecisionTreeModel using
@@ -20,7 +21,7 @@ class DecisionTreeModel(Model):
             type (str): Type of the model, default is "classification".
         """
         super().__init__(name=name, type=type)
-        self.model = DecisionTreeClassifier()
+        self._model = DecisionTreeClassifier()
 
     def fit(self, x: Any, y: Any) -> None:
         """
@@ -33,7 +34,7 @@ class DecisionTreeModel(Model):
             y (Any): Target labels for training,
             typically a 1D array or Series.
         """
-        self.model.fit(x, y)
+        self._model.fit(x, y)
 
     def predict(self, x: Any) -> Any:
         """
@@ -47,4 +48,15 @@ class DecisionTreeModel(Model):
         Returns:
             Any: Predicted labels corresponding to the input features.
         """
-        return self.model.predict(x)
+        return self._model.predict(x)
+
+    @property
+    def model(self) -> DecisionTreeClassifier:
+        """
+        Gets the underlying DecisionTreeClassifier model.
+
+        Returns:
+            DecisionTreeClassifier: The Scikit-Learn
+            DecisionTreeClassifier model.
+        """
+        return self._model

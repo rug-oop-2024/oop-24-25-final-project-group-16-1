@@ -12,14 +12,14 @@ class Artifact:
     and decoded.
 
     Attributes:
-        name (str): The name of the artifact.
-        type (str): The artifact type (e.g., 'model', 'dataset').
-        metadata (Dict[str, Any]): Additional metadata about the artifact.
-        data (Optional[bytes]): Binary data associated with the artifact.
-        asset_path (str): Path where artifact data is stored.
-        version (str): Artifact version identifier.
-        tags (List[str]): List of tags associated with the artifact.
-        id (str): Unique identifier created from name and version.
+        _name (str): The name of the artifact.
+        _type (str): The artifact type (e.g., 'model', 'dataset').
+        _metadata (Dict[str, Any]): Additional metadata about the artifact.
+        _data (Optional[bytes]): Binary data associated with the artifact.
+        _asset_path (str): Path where artifact data is stored.
+        _version (str): Artifact version identifier.
+        _tags (List[str]): List of tags associated with the artifact.
+        _id (str): Unique identifier created from name and version.
     """
 
     def __init__(
@@ -45,19 +45,124 @@ class Artifact:
             version (str): Version of the artifact (default is '1.0.0').
             tags (Optional[List[str]]): List of tags for categorization.
         """
-        self.name = name
-        self.type = type
-        self.metadata = {} if metadata is None else metadata
-        self.data = data
-        self.asset_path = asset_path
-        self.version = version
-        self.tags = tags or []
-        self.id = f"{self.name}_{self.version}"
+        self._name = name
+        self._type = type
+        self._metadata = {} if metadata is None else metadata
+        self._data = data
+        self._asset_path = asset_path
+        self._version = version
+        self._tags = tags or []
+        self._id = f"{self._name}_{self._version}"
+
+    @property
+    def name(self) -> str:
+        """
+        Gets the name of the artifact.
+        """
+        return self._name
+
+    @name.setter
+    def name(self, value: str) -> None:
+        """
+        Sets the name of the artifact.
+        """
+        self._name = value
+
+    @property
+    def type(self) -> str:
+        """
+        Gets the type of the artifact.
+        """
+        return self._type
+
+    @type.setter
+    def type(self, value: str) -> None:
+        """
+        Sets the type of the artifact.
+        """
+        self._type = value
+
+    @property
+    def metadata(self) -> Dict[str, Any]:
+        """
+        Gets the metadata of the artifact.
+        """
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, value: Dict[str, Any]) -> None:
+        """
+        Sets the metadata of the artifact.
+        """
+        self._metadata = value
+
+    @property
+    def data(self) -> Optional[bytes]:
+        """
+        Gets the data of the artifact.
+        """
+        return self._data
+
+    @data.setter
+    def data(self, value: Optional[bytes]) -> None:
+        """
+        Sets the data of the artifact.
+        """
+        self._data = value
+
+    @property
+    def asset_path(self) -> str:
+        """
+        Gets the asset path where the artifact is stored.
+        """
+        return self._asset_path
+
+    @asset_path.setter
+    def asset_path(self, value: str) -> None:
+        """
+        Sets the asset path for the artifact.
+        """
+        self._asset_path = value
+
+    @property
+    def version(self) -> str:
+        """
+        Gets the version of the artifact.
+        """
+        return self._version
+
+    @version.setter
+    def version(self, value: str) -> None:
+        """
+        Sets the version of the artifact.
+        """
+        self._version = value
+
+    @property
+    def tags(self) -> List[str]:
+        """
+        Gets the tags associated with the artifact.
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, value: List[str]) -> None:
+        """
+        Sets the tags for the artifact.
+        """
+        self._tags = value
+
+    @property
+    def id(self) -> str:
+        """
+        Gets the unique identifier of the artifact.
+        """
+        return self._id
 
     def read(self) -> pd.DataFrame:
         """
         Decodes and reads the data stored in the artifact into a
-        Pandas DataFrame, which is provided with a Base64-ecoded
+        Pandas DataFrame, which is provided with a Base64-encoded
         string or as raw binary data.
 
         Returns:
@@ -66,15 +171,15 @@ class Artifact:
         Raises:
             ValueError: If data is neither a Base64 string nor binary.
         """
-        if isinstance(self.data, str):
-            self.data = self.data.encode()
+        if isinstance(self._data, str):
+            self._data = self._data.encode()
 
-        if isinstance(self.data, bytes):
+        if isinstance(self._data, bytes):
             try:
-                decoded_data = base64.b64decode(self.data)
+                decoded_data = base64.b64decode(self._data)
                 return pd.read_csv(io.BytesIO(decoded_data))
             except Exception:
-                return pd.read_csv(io.BytesIO(self.data))
+                return pd.read_csv(io.BytesIO(self._data))
         else:
             raise ValueError(
                 "Data is neither a valid base64 string nor binary data."
@@ -92,5 +197,5 @@ class Artifact:
         Returns:
             str: Base64-encoded data as a string, ready for storage.
         """
-        self.data = base64.b64encode(data).decode("utf-8")
-        return self.data
+        self._data = base64.b64encode(data).decode("utf-8")
+        return self._data

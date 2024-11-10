@@ -10,11 +10,11 @@ class Feature:
     calculating basic statistics for numeric features.
 
     Attributes:
-        name (str): The name of the feature.
-        feature_type (
+        _name (str): The name of the feature.
+        _feature_type (
             Literal["numeric", "categorical"]
         ): The type of feature, either numeric or categorical.
-        values (List[Any]): The values of the feature.
+        _values (List[Any]): The values of the feature.
     """
 
     def __init__(
@@ -28,10 +28,9 @@ class Feature:
 
         Args:
             name (str): The name of the feature.
-            feature_type (
-            Literal['numeric', 'categorical']
-                ): The type of the feature, which can
-                be 'numeric' or 'categorical'
+            feature_type (Literal['numeric', 'categorical']): The type
+            of the feature, which can
+                be 'numeric' or 'categorical'.
             values (List[Any]): A list of values for the feature,
                 where values can be of any type depending on the feature type.
         """
@@ -41,9 +40,7 @@ class Feature:
 
     @property
     def name(self) -> str:
-        """
-        Gets the name of the feature.
-        """
+        """Gets the name of the feature."""
         return self._name
 
     @name.setter
@@ -63,9 +60,7 @@ class Feature:
 
     @property
     def feature_type(self) -> Literal["numeric", "categorical"]:
-        """
-        Gets the feature type.
-        """
+        """Gets the feature type."""
         return self._feature_type
 
     @feature_type.setter
@@ -74,8 +69,8 @@ class Feature:
         Sets the feature type.
 
         Args:
-            value (Literal['numeric', 'categorical']):
-            The new type for the feature.
+            value (Literal['numeric', 'categorical']): The new
+            type for the feature.
 
         Raises:
             ValueError: If the feature type is not one of the allowed values.
@@ -88,9 +83,7 @@ class Feature:
 
     @property
     def values(self) -> List[Any]:
-        """
-        Gets a copy of the feature values.
-        """
+        """Gets a copy of the feature values."""
         return deepcopy(self._values)
 
     @values.setter
@@ -111,7 +104,7 @@ class Feature:
     def get_statistics(self) -> Dict[str, float]:
         """
         Calculates basic statistics for numeric features, including
-        mean, sd, min, and max values.
+        mean, standard deviation, minimum, and maximum values.
 
         Returns:
             Dict[str, float]: A dictionary containing statistics for feature.
@@ -119,7 +112,7 @@ class Feature:
         Raises:
             ValueError: If the feature type is not 'numeric'.
         """
-        if self.feature_type == "numeric":
+        if self._feature_type == "numeric":
             return {
                 "mean": float(np.mean(self._values)),
                 "std": float(np.std(self._values)),

@@ -32,10 +32,101 @@ class RandomForestModel(Model):
             random number generator (default: None).
         """
         super().__init__(name=name, type=type)
-        self.model = RandomForestClassifier(
-            n_estimators=n_estimators,
-            max_depth=max_depth,
-            random_state=random_state,
+        self._n_estimators = n_estimators
+        self._max_depth = max_depth
+        self._random_state = random_state
+        self._model = RandomForestClassifier(
+            n_estimators=self._n_estimators,
+            max_depth=self._max_depth,
+            random_state=self._random_state,
+        )
+
+    @property
+    def n_estimators(self) -> int:
+        """
+        Get the number of trees in the forest.
+
+        Returns:
+            int: The number of trees (n_estimators).
+        """
+        return self._n_estimators
+
+    @n_estimators.setter
+    def n_estimators(self, value: int) -> None:
+        """
+        Set the number of trees in the forest and reinitialize the model.
+
+        Args:
+            value (int): The new number of trees.
+
+        Raises:
+            ValueError: If value is not a positive integer.
+        """
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("n_estimators must be a positive integer.")
+        self._n_estimators = value
+        self._initialize_model()
+
+    @property
+    def max_depth(self) -> int:
+        """
+        Get the maximum depth of the trees.
+
+        Returns:
+            int: The maximum depth of the trees.
+        """
+        return self._max_depth
+
+    @max_depth.setter
+    def max_depth(self, value: int) -> None:
+        """
+        Set the maximum depth of the trees and reinitialize the model.
+
+        Args:
+            value (int): The new maximum depth.
+
+        Raises:
+            ValueError: If value is not None or a positive integer.
+        """
+        if value is not None and (not isinstance(value, int) or value <= 0):
+            raise ValueError("max_depth must be None or a positive integer.")
+        self._max_depth = value
+        self._initialize_model()
+
+    @property
+    def random_state(self) -> int:
+        """
+        Get the random state for the model.
+
+        Returns:
+            int: The random state used by the model.
+        """
+        return self._random_state
+
+    @random_state.setter
+    def random_state(self, value: int) -> None:
+        """
+        Set the random state for the model and reinitialize the model.
+
+        Args:
+            value (int): The new random state.
+
+        Raises:
+            ValueError: If value is not an integer.
+        """
+        if not isinstance(value, int):
+            raise ValueError("random_state must be an integer.")
+        self._random_state = value
+        self._initialize_model()
+
+    def _initialize_model(self) -> None:
+        """
+        Initializes the RandomForestClassifier with current parameters.
+        """
+        self._model = RandomForestClassifier(
+            n_estimators=self._n_estimators,
+            max_depth=self._max_depth,
+            random_state=self._random_state,
         )
 
     def fit(self, x: Any, y: Any) -> None:
@@ -46,7 +137,7 @@ class RandomForestModel(Model):
             x (Any): The input features used for training.
             y (Any): The target labels for supervised training.
         """
-        self.model.fit(x, y)
+        self._model.fit(x, y)
 
     def predict(self, x: Any) -> Any:
         """
@@ -58,4 +149,4 @@ class RandomForestModel(Model):
         Returns:
             Any: The predicted labels for the input features.
         """
-        return self.model.predict(x)
+        return self._model.predict(x)

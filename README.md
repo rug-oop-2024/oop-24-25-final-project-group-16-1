@@ -1,3 +1,9 @@
+## DOCUMENTATION INFO
+In order to open the HTML website where we placed out design decisions, you need to do the following command on the terminal on the project's root: 
+```bash
+open build/html/index.html
+```
+
 # AutOOP your first AutoML library
 
 🎉🥳 Congratulations on making it to this final project! We are excited to see what you can do.

@@ -19,13 +19,21 @@ def write_helper_text(text: str):
     Args:
         text (str): The text to display as helper information.
     """
-    st.write(f'<p style="color: #888;">{text}</p>', unsafe_allow_html=True)
+    st.write(f'<p style="color: #888;">{text}', unsafe_allow_html=True)
 
 
 st.write("# ⚙ Modelling")
 write_helper_text(
-    "In this section, you can design a machine learning pipeline to train "
-    "a model on a dataset."
+    """
+        IMPORTANT INSTRUCTIONS:
+
+        If you have a classification file, make sure to eliminate the
+        categorical feature from the input features, and select the categorical
+        feature on the Target Feature dropdown menu. However, if you have a
+        regression file, make sure to eliminate the regression feature from the
+        input features, and select the regression feature on the Target
+        Feature dropdown menu.
+    """
 )
 
 automl = AutoMLSystem.get_instance()

@@ -13,9 +13,12 @@ st.set_page_config(page_title="Pipeline Deployment", page_icon="🚀")
 st.write("# 🚀 Pipeline Deployment")
 st.write(
     """
-    Here you can view all saved machine learning pipelines
-    and deploy them if needed.
-    Select a pipeline to see its configuration and metrics.
+    IMPORTANT INFORMATION:
+
+    The uploaded file needs to have a similar structure with the one used
+    for the training. If you used nyc_housing.csv as the file
+    used for training, then you have to
+    upload the nyc_housing_new_predictions.csv
     """
 )
 
@@ -32,7 +35,6 @@ if pipeline_files:
         selected_pipeline = load(f)
 
     if isinstance(selected_pipeline, dict):
-
         metadata = selected_pipeline.get("metadata", {})
         metrics_name = metadata["metrics"]
         reverse_metric_map = {
@@ -101,28 +103,34 @@ if pipeline_files:
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
 
-        asset_path = f"dataset/{selected_name}_addition.csv"
-        new_dataset = Dataset.from_dataframe(
-            data=data, name=selected_name, asset_path=asset_path,
-            version="1.0.0"
-        )
-        selected_pipeline = Pipeline(
-            metrics=metrics,
-            dataset=new_dataset,
-            model=model,
-            input_features=input_features_wrapped,
-            target_feature=target_feature_wrapped,
-            split=split,
-        )
-        predictions = selected_pipeline.execute()
-        with st.expander("View New Training Results"):
-            st.write(predictions)
+        expected_features = set(input_features)
+        uploaded_features = set(data.columns)
 
-    #    if st.button("Delete Pipeline"):
-    #    AutoMLSystem.get_instance().registry.delete(f"{selected_name}_1.0.0")
-    #    os.remove(selected_file)
-    #    st.success(f"Pipeline '{selected_name}' deleted successfully.")
-    #    st.rerun()
+        missing_features = expected_features - uploaded_features
+
+        if missing_features:
+            missing_features_str = ', '.join(missing_features)
+            st.error(
+                f"Missing required features in the file:"
+                f"{missing_features_str}"
+            )
+        else:
+            asset_path = f"dataset/{selected_name}_addition.csv"
+            new_dataset = Dataset.from_dataframe(
+                data=data, name=selected_name, asset_path=asset_path,
+                version="1.0.0"
+            )
+            selected_pipeline = Pipeline(
+                metrics=metrics,
+                dataset=new_dataset,
+                model=model,
+                input_features=input_features_wrapped,
+                target_feature=target_feature_wrapped,
+                split=split,
+            )
+            predictions = selected_pipeline.execute()
+            with st.expander("View New Training Results"):
+                st.write(predictions)
 
 else:
     st.write("No saved pipelines found.")

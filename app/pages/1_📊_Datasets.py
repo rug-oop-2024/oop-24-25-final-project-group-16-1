@@ -31,7 +31,10 @@ else:
     st.write("No datasets available.")
 
 st.subheader("Upload a New Dataset")
-uploaded_file = st.file_uploader("Choose a file to upload", type=["csv"])
+uploaded_file = st.file_uploader(
+    "UPLOAD A FILE THAT DOES NOT FINISH WITH _NEW_PREDICTIONS.CSV",
+    type=["csv"]
+)
 
 if uploaded_file:
     data = pd.read_csv(uploaded_file)

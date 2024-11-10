@@ -60,6 +60,16 @@ class Metric(ABC):
         """
         pass
 
+    @abstractmethod
+    def __str__(self) -> str:
+        """
+        Provides a string representation of the metric.
+
+        Returns:
+            str: The name of the metric.
+        """
+        pass
+
 
 class Accuracy(Metric):
     """
@@ -84,6 +94,15 @@ class Accuracy(Metric):
             )
         correct = sum(yt == yp for yt, yp in zip(y_true, y_pred))
         return correct / len(y_true) if y_true else 0.0
+
+    def __str__(self) -> str:
+        """
+        String representation of the Accuracy metric.
+
+        Returns:
+            str: "Accuracy"
+        """
+        return "accuracy"
 
 
 class MeanSquaredError(Metric):
@@ -111,6 +130,15 @@ class MeanSquaredError(Metric):
             )
         return np.mean((y_true - y_pred) ** 2)
 
+    def __str__(self) -> str:
+        """
+        String representation of the Mean Squared Error metric.
+
+        Returns:
+            str: "MeanSquaredError"
+        """
+        return "mean_squared_error"
+
 
 class MeanAbsoluteError(Metric):
     """
@@ -134,6 +162,15 @@ class MeanAbsoluteError(Metric):
                 "Length of true labels and predicted labels must match."
             )
         return np.mean(np.abs(np.array(y_true) - np.array(y_pred)))
+
+    def __str__(self) -> str:
+        """
+        String representation of the Mean Absolute Error metric.
+
+        Returns:
+            str: "MeanAbsoluteError"
+        """
+        return "mean_absolute_error"
 
 
 class R2Score(Metric):
@@ -160,6 +197,15 @@ class R2Score(Metric):
         ss_total = np.sum((np.array(y_true) - np.mean(y_true)) ** 2)
         ss_residual = np.sum((np.array(y_true) - np.array(y_pred)) ** 2)
         return 1 - (ss_residual / ss_total) if ss_total > 0 else 0.0
+
+    def __str__(self) -> str:
+        """
+        String representation of the R2Score metric.
+
+        Returns:
+            str: "R2Score"
+        """
+        return "r2_score"
 
 
 class Precision(Metric):
@@ -194,6 +240,15 @@ class Precision(Metric):
             else 0.0
         )
 
+    def __str__(self) -> str:
+        """
+        String representation of the Precision metric.
+
+        Returns:
+            str: "Precision"
+        """
+        return "precision"
+
 
 class Recall(Metric):
     """
@@ -221,3 +276,12 @@ class Recall(Metric):
         )
         actual_positive = sum(1 for yt in y_true if yt == 1)
         return true_positive / actual_positive if actual_positive > 0 else 0.0
+
+    def __str__(self) -> str:
+        """
+        String representation of the Recall metric.
+
+        Returns:
+            str: "Recall"
+        """
+        return "recall"

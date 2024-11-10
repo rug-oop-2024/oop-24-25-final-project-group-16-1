@@ -13,7 +13,7 @@ class Dataset(Artifact):
     and reading/saving data with Base64 encoding for serialization.
 
     Attributes:
-        description (str): A brief description of the dataset's contents.
+        _description (str): A brief description of the dataset's contents.
     """
 
     def __init__(self, description: str = " ", *args, **kwargs) -> None:
@@ -22,11 +22,24 @@ class Dataset(Artifact):
         properties inherited from Artifact.
 
         Args:
-            description (str): A description of the
-            dataset's content.
+            description (str): A description of the dataset's content.
         """
         super().__init__(type="dataset", *args, **kwargs)
-        self.description = description
+        self._description = description
+
+    @property
+    def description(self) -> str:
+        """
+        Gets the description of the dataset.
+        """
+        return self._description
+
+    @description.setter
+    def description(self, value: str) -> None:
+        """
+        Sets the description of the dataset.
+        """
+        self._description = value
 
     @staticmethod
     def from_dataframe(
@@ -75,10 +88,10 @@ class Dataset(Artifact):
         Raises:
             ValueError: If data is neither Base64-encoded string nor binary.
         """
-        if isinstance(self.data, str):
-            decoded_data = base64.b64decode(self.data)
-        elif isinstance(self.data, bytes):
-            decoded_data = self.data
+        if isinstance(self._data, str):
+            decoded_data = base64.b64decode(self._data)
+        elif isinstance(self._data, bytes):
+            decoded_data = self._data
         else:
             raise ValueError(
                 "Data is neither a valid Base64 string nor binary data."
