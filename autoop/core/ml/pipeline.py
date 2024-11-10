@@ -222,7 +222,7 @@ class Pipeline:
         metrics_results = []
         for metric in self._metrics:
             result = metric.evaluate(predictions, Y)
-            metrics_results.append(metric, result)
+            metrics_results.append((metric, result))
 
         self._metrics_results = metrics_results
         return metrics_results, predictions

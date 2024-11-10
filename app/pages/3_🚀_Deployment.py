@@ -2,7 +2,6 @@ import os
 from pickle import load
 import pandas as pd
 import streamlit as st
-from app.core.system import AutoMLSystem
 from autoop.core.ml.dataset import Dataset
 from autoop.core.ml.feature import Feature
 from autoop.core.ml.metric import get_metric
@@ -31,11 +30,11 @@ if pipeline_files:
 
     with open(selected_file, "rb") as f:
         selected_pipeline = load(f)
-    
+
     if isinstance(selected_pipeline, dict):
         st.write("Here's its content:")
 
-        metadata = selected_pipeline.get("metadata", {})    
+        metadata = selected_pipeline.get("metadata", {})
         metrics_name = metadata["metrics"]
         reverse_metric_map = {
             "MeanSquaredError": "mean_squared_error",
@@ -45,7 +44,9 @@ if pipeline_files:
             "Precision": "precision",
             "Recall": "recall",
         }
-        metrics = [get_metric(reverse_metric_map.get(f, f)) for f in metrics_name]
+        metrics = [
+            get_metric(reverse_metric_map.get(f, f)) for f in metrics_name
+        ]
         model_name = metadata["model"]
         reverse_model_map = {
             "DecisionTreeModel": "Decision Trees",
@@ -67,14 +68,28 @@ if pipeline_files:
             st.write(f"Target Feature: {target_feature}")
             st.write(f"Split Ratio: {split}")
 
-        input_features_wrapped = [
-            Feature(name=f, feature_type=("numerical" if f != target_feature else "categorical"), values=[])
-            for f in input_features
-        ]
         if model_name in CLASSIFICATION_MODELS:
-            target_feature_wrapped = Feature(name=target_feature, feature_type="categorical", values=[])
+            input_features_wrapped = [
+                Feature(
+                    name=f, feature_type=(
+                        "numerical" if f != target_feature else "categorical"
+                    ), values=[]
+                )
+                for f in input_features
+            ]
+            target_feature_wrapped = Feature(
+                name=target_feature, feature_type="categorical", values=[]
+            )
         else:
-            target_feature_wrapped = Feature(name=target_feature, feature_type="numerical", values=[])
+            input_features_wrapped = [
+                Feature(
+                    name=f, feature_type="numerical", values=[]
+                )
+                for f in input_features
+            ]
+            target_feature_wrapped = Feature(
+                name=target_feature, feature_type="numerical", values=[]
+            )
 
     st.subheader("Make predictions")
     st.write(
@@ -109,11 +124,11 @@ if pipeline_files:
             with st.expander("View New Training Results"):
                 st.write(predictions)
 
-    #if st.button("Delete Pipeline"):
+    #    if st.button("Delete Pipeline"):
     #    AutoMLSystem.get_instance().registry.delete(f"{selected_name}_1.0.0")
     #    os.remove(selected_file)
     #    st.success(f"Pipeline '{selected_name}' deleted successfully.")
-    #    st.rerun()  
+    #    st.rerun()
 
 else:
     st.write("No saved pipelines found.")
