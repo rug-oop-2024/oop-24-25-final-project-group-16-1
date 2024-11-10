@@ -168,7 +168,7 @@ If you did not implement the feature
 | `ML/model`                            | NF           |   Both               |     X   | |
 | `ML/model/extensions`                 | FN           |   Both               |     X   | |
 | `ML/pipeline/evaluation`              | FN           |   Ana                |     X   | | 
-| `ST/page/datasets`                    | NF           |   Ana                |     X   | |
+| `ST/page/datasets`                    | NF           |   Deborah            |     X   | |
 | `ST/datasets/management/create`       | FN           |   Ana                |     X   | |
 | `ST/datasets/management/save`         | FN           |   Ana                |     X   | |
 | `ST/page/modelling`                   | NF           |   Deborah            |     X   | |
@@ -182,7 +182,7 @@ If you did not implement the feature
 | `ST/modelling/pipeline/save`          | FN           |   Ana                |     X   | |
 | `ST/page/deployment`                  | FN           |   Ana                |     X   | |
 | `ST/deployment/load`                  | FN           |   Ana                |     X   | |
-| `ST/deployment/predict`               | FN           |   Ana                |         | |
+| `ST/deployment/predict`               | FN           |   Ana                |     X   | |
 
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |

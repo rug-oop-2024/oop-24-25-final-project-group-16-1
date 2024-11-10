@@ -14,13 +14,14 @@ METRICS = [
 
 def get_metric(name: str) -> Type["Metric"]:
     """
-    Factory function to retrieve a metric class instance by name.
+    Retrieves a metric class instance based on the provided name.
 
     Args:
-        name (str): The name of the metric.
+        name (str): The name of the desired metric.
 
     Returns:
-        Type[Metric]: A metric class instance based on the provided name.
+        Type[Metric]: An instance of the metric class
+        associated with the specified name.
 
     Raises:
         ValueError: If the metric name is not recognized.
@@ -42,28 +43,28 @@ def get_metric(name: str) -> Type["Metric"]:
 
 class Metric(ABC):
     """
-    Base class for all metrics. Enforces implementation
-    of the `evaluate` method.
+    Abstract base class for all metrics, requiring the implementation
+    of an `evaluate` method for calculating the metric value.
     """
 
     @abstractmethod
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         """
-        Calculates the metric based on true and predicted values.
+        Computes the metric based on the true and predicted values.
 
         Args:
-            y_true (List[Any]): The true labels.
+            y_true (List[Any]): The actual labels.
             y_pred (List[Any]): The predicted labels.
 
         Returns:
-            float: The computed metric value.
+            float: The calculated metric value.
         """
         pass
 
     @abstractmethod
     def __str__(self) -> str:
         """
-        Provides a string representation of the metric.
+        Returns the metric name as a string representation.
 
         Returns:
             str: The name of the metric.
@@ -74,111 +75,65 @@ class Metric(ABC):
         return self.__class__.__name__
 
 
-class Accuracy(Metric):
-    """
-    Calculates the accuracy of predictions.
-    """
-
-    def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
-        """
-        Evaluates accuracy, calculating the ratio of correct predictions
-        to the total number of predictions.
-
-        Args:
-            y_true (List[Any]): The true labels.
-            y_pred (List[Any]): The predicted labels.
-
-        Returns:
-            float: The accuracy score, or 0.0 if `y_true` is empty.
-        """
-        if len(y_true) != len(y_pred):
-            raise ValueError(
-                "Length of true labels and predicted labels must match."
-            )
-        correct = sum(yt == yp for yt, yp in zip(y_true, y_pred))
-        return correct / len(y_true) if y_true else 0.0
-
-    def __str__(self) -> str:
-        """
-        String representation of the Accuracy metric.
-
-        Returns:
-            str: "Accuracy"
-        """
-        return "accuracy"
-
-
 class MeanSquaredError(Metric):
     """
-    Calculates the Mean Squared Error (MSE) of predictions.
+    Metric class for calculating the Mean Squared Error (MSE) of predictions.
     """
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
         """
-        Computes the mean of the squared differences
+        Computes the MSE, the mean of squared differences
         between true and predicted values.
 
         Args:
-            y_true (List[float]): The true labels.
+            y_true (List[float]): The actual labels.
             y_pred (List[float]): The predicted labels.
 
         Returns:
-            float: The Mean Squared Error.
+            float: The calculated Mean Squared Error.
         """
         y_true = np.array(y_true).flatten()
         y_pred = np.array(y_pred).flatten()
         if len(y_true) != len(y_pred):
             raise ValueError(
-                "Length of true labels and predicted labels must match."
+                "The lengths of true and predicted labels must match."
             )
         return np.mean((y_true - y_pred) ** 2)
 
     def __str__(self) -> str:
-        """
-        String representation of the Mean Squared Error metric.
-
-        Returns:
-            str: "MeanSquaredError"
-        """
         return "mean_squared_error"
 
 
 class MeanAbsoluteError(Metric):
     """
-    Calculates the Mean Absolute Error (MAE) of predictions.
+    Metric class for calculating the Mean Absolute Error (MAE) of predictions.
     """
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
         """
-        Computes the mean of absolute differences
-        between true and predicted values.
+        Computes the MAE, the mean of absolute
+        differences between true and predicted values.
 
         Args:
-            y_true (List[float]): The true labels.
+            y_true (List[float]): The actual labels.
             y_pred (List[float]): The predicted labels.
 
         Returns:
-            float: The Mean Absolute Error.
+            float: The calculated Mean Absolute Error.
         """
         if len(y_true) != len(y_pred):
             raise ValueError(
-                "Length of true labels and predicted labels must match."
+                "The lengths of true and predicted labels must match."
             )
         return np.mean(np.abs(np.array(y_true) - np.array(y_pred)))
 
     def __str__(self) -> str:
-        """
-        String representation of the Mean Absolute Error metric.
-
-        Returns:
-            str: "MeanAbsoluteError"
-        """
         return "mean_absolute_error"
 
 
 class R2Score(Metric):
     """
-    Calculates the R-squared (R²) score of predictions.
+    Metric class for calculating the R-squared (R²) score of predictions.
     """
 
     def evaluate(self, y_true: List[float], y_pred: List[float]) -> float:
@@ -187,104 +142,101 @@ class R2Score(Metric):
         in `y_true` that is predictable from `y_pred`.
 
         Args:
-            y_true (List[float]): The true labels.
+            y_true (List[float]): The actual labels.
             y_pred (List[float]): The predicted labels.
 
         Returns:
-            float: The R-squared score, or 0.0 if variance in `y_true` is zero.
+            float: The R-squared score. Returns
+            0.0 if the variance of `y_true` is zero.
         """
         if len(y_true) != len(y_pred):
             raise ValueError(
-                "Length of true labels and predicted labels must match."
+                "The lengths of true and predicted labels must match."
             )
         ss_total = np.sum((np.array(y_true) - np.mean(y_true)) ** 2)
         ss_residual = np.sum((np.array(y_true) - np.array(y_pred)) ** 2)
         return 1 - (ss_residual / ss_total) if ss_total > 0 else 0.0
 
     def __str__(self) -> str:
-        """
-        String representation of the R2Score metric.
-
-        Returns:
-            str: "R2Score"
-        """
         return "r2_score"
 
 
 class Precision(Metric):
     """
-    Calculates the precision of predictions.
+    Metric class for calculating the precision
+    of binary classification predictions.
     """
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         """
-        Computes the ratio of true positive
+        Computes precision, the ratio of true positive
         predictions to all positive predictions.
 
         Args:
-            y_true (List[Any]): The true labels.
+            y_true (List[Any]): The actual labels.
             y_pred (List[Any]): The predicted labels.
 
         Returns:
             float: The precision score, or 0.0 if no
             positive predictions were made.
         """
-        if len(y_true) != len(y_pred):
-            raise ValueError(
-                "Length of true labels and predicted labels must match."
-            )
-        true_positive = sum(
-            1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1
-        )
-        predicted_positive = sum(1 for yp in y_pred if yp == 1)
+        true_positive = np.count_nonzero((y_true == 1) & (y_pred == 1))
+        predict_positive = np.count_nonzero(y_pred == 1)
         return (
-            true_positive / predicted_positive
-            if predicted_positive > 0
+            true_positive / predict_positive
+            if predict_positive > 0
             else 0.0
         )
 
     def __str__(self) -> str:
-        """
-        String representation of the Precision metric.
-
-        Returns:
-            str: "Precision"
-        """
         return "precision"
 
 
 class Recall(Metric):
     """
-    Calculates the recall of predictions.
+    Metric class for calculating the recall of
+    binary classification predictions.
     """
 
     def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         """
-        Computes the ratio of true positive predictions
-        to all actual positive cases.
+        Computes recall, the ratio of true positive predictions
+        to all actual positives.
 
         Args:
-            y_true (List[Any]): The true labels.
+            y_true (List[Any]): The actual labels.
             y_pred (List[Any]): The predicted labels.
 
         Returns:
-            float: The recall score, or 0.0 if there are no actual positives.
+            float: The recall score, or 0.0 if there
+            are no actual positive labels.
         """
-        if len(y_true) != len(y_pred):
-            raise ValueError(
-                "Length of true labels and predicted labels must match."
-            )
-        true_positive = sum(
-            1 for yt, yp in zip(y_true, y_pred) if yt == 1 and yp == 1
-        )
-        actual_positive = sum(1 for yt in y_true if yt == 1)
+        true_positive = np.count_nonzero((y_true == 1) & (y_pred == 1))
+        actual_positive = np.count_nonzero(y_true == 1)
         return true_positive / actual_positive if actual_positive > 0 else 0.0
 
     def __str__(self) -> str:
+        return "recall"
+
+
+class Accuracy(Metric):
+    """
+    Metric class for calculating the accuracy of predictions.
+    """
+
+    def evaluate(self, y_true: List[Any], y_pred: List[Any]) -> float:
         """
-        String representation of the Recall metric.
+        Computes accuracy, the ratio of correct predictions
+        to the total predictions.
+
+        Args:
+            y_true (List[Any]): The actual labels.
+            y_pred (List[Any]): The predicted labels.
 
         Returns:
-            str: "Recall"
+            float: The accuracy score, or 0.0 if `y_true` is empty.
         """
-        return "recall"
+        return np.mean(y_true == y_pred)
+
+    def __str__(self) -> str:
+        return "accuracy"

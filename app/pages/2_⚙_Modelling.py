@@ -26,13 +26,13 @@ st.write("# ⚙ Modelling")
 write_helper_text(
     """
         IMPORTANT INSTRUCTIONS:
-
+        <p>
         If you have a classification file, make sure to eliminate the
         categorical feature from the input features, and select the categorical
         feature on the Target Feature dropdown menu. However, if you have a
         regression file, make sure to eliminate the regression feature from the
         input features, and select the regression feature on the Target
-        Feature dropdown menu.
+        Feature dropdown menu.</p>
     """
 )
 
@@ -72,10 +72,14 @@ if datasets:
                 "Select the features for your model. Choose multiple input "
                 "features and one target feature."
             )
-
+            non_categorical_features = [
+                feature.name
+                for feature in features
+                if feature.feature_type != "categorical"
+            ]
             input_features = st.multiselect(
-                "Select Input Features", feature_names,
-                default=feature_names[:-1]
+                "Select Input Features", non_categorical_features,
+                default=non_categorical_features[:-1]
             )
             target_feature = st.selectbox(
                 "Select Target Feature", feature_names,

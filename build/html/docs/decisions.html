@@ -44,7 +44,7 @@ Requires each subclass to override methods.</p>
 <p><strong>Alternatives:</strong>
 Use a standard class without enforced method overrides.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0001-using-abc-for-model-interface.md</cite></p>
+<cite>autoop/core/ml/model/model.py</cite></p>
 </section>
 <section id="dsc-0002-use-base64-encoding-for-data-serialization">
 <h1>DSC-0002: Use Base64 Encoding for Data Serialization<a class="headerlink" href="#dsc-0002-use-base64-encoding-for-data-serialization" title="Link to this heading">¶</a></h1>
@@ -60,7 +60,7 @@ Increases data size.</p>
 <p><strong>Alternatives:</strong>
 Use binary storage or implement a custom serialization format.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0002-use-base64-encoding.md</cite></p>
+<cite>autoop/core/ml/artifact.py</cite></p>
 </section>
 <section id="dsc-0003-use-unique-id-for-artifact-versioning">
 <h1>DSC-0003: Use Unique ID for Artifact Versioning<a class="headerlink" href="#dsc-0003-use-unique-id-for-artifact-versioning" title="Link to this heading">¶</a></h1>
@@ -76,7 +76,7 @@ Requires versioning management to avoid conflicts.</p>
 <p><strong>Alternatives:</strong>
 Use a hashing function for a unique identifier.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0003-use-unique-id-for-versioning.md</cite></p>
+<cite>autoop/core/ml/artifact.py</cite></p>
 </section>
 <section id="dsc-0004-extend-artifact-class-for-dataset-handling">
 <h1>DSC-0004: Extend Artifact Class for Dataset Handling<a class="headerlink" href="#dsc-0004-extend-artifact-class-for-dataset-handling" title="Link to this heading">¶</a></h1>
@@ -92,7 +92,7 @@ Dataset class must align with <cite>Artifact</cite> data handling.</p>
 <p><strong>Alternatives:</strong>
 Create a separate standalone <cite>Dataset</cite> class.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0004-extend-artifact-for-dataset.md</cite></p>
+<cite>autoop/core/ml/dataset.py</cite></p>
 </section>
 <section id="dsc-0005-use-base64-encoding-for-dataset-serialization">
 <h1>DSC-0005: Use Base64 Encoding for Dataset Serialization<a class="headerlink" href="#dsc-0005-use-base64-encoding-for-dataset-serialization" title="Link to this heading">¶</a></h1>
@@ -108,7 +108,7 @@ Increases data size.</p>
 <p><strong>Alternatives:</strong>
 Store data as raw binary.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0005-use-base64-for-dataset-serialization.md</cite></p>
+<cite>autoop/core/ml/dataset.py</cite></p>
 </section>
 <section id="dsc-0006-encapsulation-for-feature-attributes">
 <h1>DSC-0006: Encapsulation for Feature Attributes<a class="headerlink" href="#dsc-0006-encapsulation-for-feature-attributes" title="Link to this heading">¶</a></h1>
@@ -124,7 +124,7 @@ Increases code complexity with additional methods.</p>
 <p><strong>Alternatives:</strong>
 Directly use public attributes without validation.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0006-encapsulation-for-feature-attributes.md</cite></p>
+<cite>autoop/core/ml/feature.py</cite></p>
 </section>
 <section id="dsc-0007-provide-statistics-calculation-for-numeric-features">
 <h1>DSC-0007: Provide Statistics Calculation for Numeric Features<a class="headerlink" href="#dsc-0007-provide-statistics-calculation-for-numeric-features" title="Link to this heading">¶</a></h1>
@@ -140,7 +140,7 @@ Only applicable for numeric features; raises error if called on categorical data
 <p><strong>Alternatives:</strong>
 Move statistics calculation to an external function.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0007-provide-statistics-for-numeric-features.md</cite></p>
+<cite>autoop/core/ml/feature.py</cite></p>
 </section>
 <section id="dsc-0008-use-abstract-base-class-for-metric-interface">
 <h1>DSC-0008: Use Abstract Base Class for Metric Interface<a class="headerlink" href="#dsc-0008-use-abstract-base-class-for-metric-interface" title="Link to this heading">¶</a></h1>
@@ -156,7 +156,7 @@ Each subclass must implement its own <cite>evaluate</cite> method.</p>
 <p><strong>Alternatives:</strong>
 Use a simple base class without enforced abstract methods.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0008-use-abc-for-metric-interface.md</cite></p>
+<cite>autoop/core/ml/metric.py</cite></p>
 </section>
 <section id="dsc-0009-factory-function-for-metric-retrieval">
 <h1>DSC-0009: Factory Function for Metric Retrieval<a class="headerlink" href="#dsc-0009-factory-function-for-metric-retrieval" title="Link to this heading">¶</a></h1>
@@ -172,7 +172,7 @@ Requires updates when new metrics are added.</p>
 <p><strong>Alternatives:</strong>
 Directly instantiate metrics without a factory function.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0009-factory-function-for-metrics.md</cite></p>
+<cite>autoop/core/ml/metric.py</cite></p>
 </section>
 <section id="dsc-0010-validation-of-model-type-based-on-target-feature-type">
 <h1>DSC-0010: Validation of Model Type Based on Target Feature Type<a class="headerlink" href="#dsc-0010-validation-of-model-type-based-on-target-feature-type" title="Link to this heading">¶</a></h1>
@@ -188,7 +188,7 @@ Additional model types will require validation updates.</p>
 <p><strong>Alternatives:</strong>
 Use a less strict validation and allow flexibility.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0010-validation-of-model-type.md</cite></p>
+<cite>autoop/core/ml/pipeline.py</cite></p>
 </section>
 <section id="dsc-0011-artifact-registration-system">
 <h1>DSC-0011: Artifact Registration System<a class="headerlink" href="#dsc-0011-artifact-registration-system" title="Link to this heading">¶</a></h1>
@@ -204,7 +204,7 @@ Large data could lead to increased storage requirements.</p>
 <p><strong>Alternatives:</strong>
 Use logging instead of in-memory tracking.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0011-artifact-registration-system.md</cite></p>
+<cite>autoop/core/ml/pipeline.py</cite></p>
 </section>
 <section id="dsc-0012-split-data-by-configurable-ratio">
 <h1>DSC-0012: Split Data by Configurable Ratio<a class="headerlink" href="#dsc-0012-split-data-by-configurable-ratio" title="Link to this heading">¶</a></h1>
@@ -220,7 +220,7 @@ Fixed ratio may not be suitable for all dataset sizes.</p>
 <p><strong>Alternatives:</strong>
 Use cross-validation or k-folds.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0012-split-data-by-configurable-ratio.md</cite></p>
+<cite>autoop/core/ml/pipeline.py</cite></p>
 </section>
 <section id="dsc-0013-use-json-serialization-for-data-persistence">
 <h1>DSC-0013: Use JSON Serialization for Data Persistence<a class="headerlink" href="#dsc-0013-use-json-serialization-for-data-persistence" title="Link to this heading">¶</a></h1>
@@ -236,7 +236,7 @@ JSON is not ideal for very large datasets or complex data.</p>
 <p><strong>Alternatives:</strong>
 SQLite or NoSQL databases for larger data needs.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0013-split-data-by-configurable-ratio.md</cite></p>
+<cite>autoop/core/database.py</cite></p>
 </section>
 <section id="dsc-0014-automatic-detection-of-feature-types">
 <h1>DSC-0014: Automatic Detection of Feature Types<a class="headerlink" href="#dsc-0014-automatic-detection-of-feature-types" title="Link to this heading">¶</a></h1>
@@ -252,7 +252,7 @@ May not work for complex data types or features that require custom classificati
 <p><strong>Alternatives:</strong>
 Allow manual feature type input or use a more feature type detection library.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0014-automatic-detection-of-feature-types.md</cite></p>
+<cite>autoop/core/functional/feature.py</cite></p>
 </section>
 <section id="dsc-0015-preprocessing-features-with-scikit-learn-encoders">
 <h1>DSC-0015: Preprocessing Features with Scikit-Learn Encoders<a class="headerlink" href="#dsc-0015-preprocessing-features-with-scikit-learn-encoders" title="Link to this heading">¶</a></h1>
@@ -268,74 +268,10 @@ Limited to one-hot encoding and standard scaling.</p>
 <p><strong>Alternatives:</strong>
 Custom encoders, MinMaxScaler for numeric scaling, or other libraries.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0015-preprocess-features-with-encoders.md</cite></p>
-</section>
-<section id="dsc-0016-testing-database-persistence-and-retrieval">
-<h1>DSC-0016: Testing Database Persistence and Retrieval<a class="headerlink" href="#dsc-0016-testing-database-persistence-and-retrieval" title="Link to this heading">¶</a></h1>
-<p><strong>Date:</strong> 2024-11-08
-<strong>Decision:</strong> Use unittest framework for testing database CRUD operations and persistence in a temporary storage location.
-<strong>Status:</strong> Accepted</p>
-<p><strong>Motivation:</strong>
-Ensure database operations are reliable and persist across sessions.</p>
-<p><strong>Reason:</strong>
-Critical for data integrity and accurate data retrieval.</p>
-<p><strong>Limitations:</strong>
-Tests rely on local storage, which may not reflect behavior in distributed or cloud environments.</p>
-<p><strong>Alternatives:</strong>
-Use Pytest for enhanced flexibility and parameterized tests.</p>
-<p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0016-database-persistence-testing.md</cite></p>
-</section>
-<section id="dsc-0017-testing-feature-type-detection-in-datasets">
-<h1>DSC-0017: Testing Feature Type Detection in Datasets<a class="headerlink" href="#dsc-0017-testing-feature-type-detection-in-datasets" title="Link to this heading">¶</a></h1>
-<p><strong>Date:</strong> 2024-11-08
-<strong>Decision:</strong> Use sklearn’s Iris and Adult datasets to test feature type detection functionality across categorical and numerical features.
-<strong>Status:</strong> Accepted</p>
-<p><strong>Motivation:</strong>
-Validate feature type detection in datasets containing mixed types.</p>
-<p><strong>Reason:</strong>
-Essential to ensure model compatibility and preprocessing accuracy.</p>
-<p><strong>Limitations:</strong>
-Limited to specific sklearn datasets, may require expansion for custom datasets.</p>
-<p><strong>Alternatives:</strong>
-Use synthetic datasets with controlled feature types.</p>
-<p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0017-feature-type-detection-testing.md</cite></p>
-</section>
-<section id="dsc-0018-pipeline-testing-for-adult-dataset">
-<h1>DSC-0018: Pipeline Testing for Adult Dataset<a class="headerlink" href="#dsc-0018-pipeline-testing-for-adult-dataset" title="Link to this heading">¶</a></h1>
-<p><strong>Date:</strong> 2024-11-08
-<strong>Decision:</strong> Use the Adult dataset from sklearn’s OpenML to test the pipeline setup, feature preprocessing, data splitting, model training, and evaluation.
-<strong>Status:</strong> Accepted</p>
-<p><strong>Motivation:</strong>
-Ensure pipeline functionality for regression tasks with numeric and categorical features.</p>
-<p><strong>Reason:</strong>
-Testing real-world data allows robust validation of pipeline components.</p>
-<p><strong>Limitations:</strong>
-Focused on a single dataset, which may not cover all cases.</p>
-<p><strong>Alternatives:</strong>
-Generate synthetic datasets with controlled feature distributions.</p>
-<p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0018-pipeline-testing-adult-dataset.md</cite></p>
-</section>
-<section id="dsc-0019-localstorage-class-for-testing-storage-behavior">
-<h1>DSC-0019: LocalStorage Class for Testing Storage Behavior<a class="headerlink" href="#dsc-0019-localstorage-class-for-testing-storage-behavior" title="Link to this heading">¶</a></h1>
-<p><strong>Date:</strong> 2024-11-08
-<strong>Decision:</strong> Use LocalStorage for testing saving, loading, deleting, and listing data to verify local storage functionality.
-<strong>Status:</strong> Accepted</p>
-<p><strong>Motivation:</strong>
-Ensuring file storage functions as expected within the local file system.</p>
-<p><strong>Reason:</strong>
-LocalStorage provides a file-based storage interface for persisting artifacts.</p>
-<p><strong>Limitations:</strong>
-Tests depend on OS file handling and may require temp directories.</p>
-<p><strong>Alternatives:</strong>
-Use a mock storage or in-memory storage.</p>
-<p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0019-localstorage-class-for-testing.md</cite></p>
+<cite>autoop/core/functional/preprocessing.py</cite></p>
 </section>
 <section id="dsc-0020-model-selection-with-factory-method">
-<h1>DSC-0020: Model Selection with Factory Method<a class="headerlink" href="#dsc-0020-model-selection-with-factory-method" title="Link to this heading">¶</a></h1>
+<h1>DSC-0016: Model Selection with Factory Method<a class="headerlink" href="#dsc-0020-model-selection-with-factory-method" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-08
 <strong>Decision:</strong> Implement a factory function for model selection.
 <strong>Status:</strong> Accepted</p>
@@ -348,10 +284,10 @@ Requires updating <cite>models_map</cite> for new models.</p>
 <p><strong>Alternatives:</strong>
 Use individual import and instantiation in each script.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0020-model-selection-with-factory-method.md</cite></p>
+<cite>autoop/core/ml/model/__init__.py</cite></p>
 </section>
 <section id="dsc-0021-lasso-regression-model-implementation">
-<h1>DSC-0021: Lasso Regression Model Implementation<a class="headerlink" href="#dsc-0021-lasso-regression-model-implementation" title="Link to this heading">¶</a></h1>
+<h1>DSC-0017: Lasso Regression Model Implementation<a class="headerlink" href="#dsc-0021-lasso-regression-model-implementation" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-09
 <strong>Decision:</strong> Implement Lasso regression as a model subclass with configurable regularization.
 <strong>Status:</strong> Accepted</p>
@@ -364,10 +300,10 @@ Regularization strength must be manually tuned for optimal performance.</p>
 <p><strong>Alternatives:</strong>
 Ridge regression, Elastic Net.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0021-lasso-regression-model.md</cite></p>
+<cite>autoop/core/ml/model/regression/lasso_regression.py</cite></p>
 </section>
 <section id="dsc-0022-linear-regression-with-gradient-descent">
-<h1>DSC-0022: Linear Regression with Gradient Descent<a class="headerlink" href="#dsc-0022-linear-regression-with-gradient-descent" title="Link to this heading">¶</a></h1>
+<h1>DSC-0018: Linear Regression with Gradient Descent<a class="headerlink" href="#dsc-0022-linear-regression-with-gradient-descent" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-09
 <strong>Decision:</strong> Implement linear regression using gradient descent as an iterative optimization.
 <strong>Status:</strong> Accepted</p>
@@ -380,10 +316,10 @@ Gradient descent can be slow for large datasets and may require tuning.</p>
 <p><strong>Alternatives:</strong>
 Use libraries like scikit-learn for optimized, built-in linear regression.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0022-linear-regression-with-gradient-descent.md</cite></p>
+<cite>autoop/core/ml/model/regression/linear_regression.py</cite></p>
 </section>
 <section id="dsc-0023-use-linearregressionmodel-for-multiple-linear-regression">
-<h1>DSC-0023: Use LinearRegressionModel for Multiple Linear Regression<a class="headerlink" href="#dsc-0023-use-linearregressionmodel-for-multiple-linear-regression" title="Link to this heading">¶</a></h1>
+<h1>DSC-0019: Use LinearRegressionModel for Multiple Linear Regression<a class="headerlink" href="#dsc-0023-use-linearregressionmodel-for-multiple-linear-regression" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-09
 <strong>Decision:</strong> Use LinearRegressionModel as the base model for implementing multiple linear regression.
 <strong>Status:</strong> Accepted</p>
@@ -396,10 +332,10 @@ Inherits all limitations of the LinearRegressionModel, such as slow convergence 
 <p><strong>Alternatives:</strong>
 Implement multiple linear regression separately or use a third-party library.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0023-multiple-linear-regression-using-linear-regression.md</cite></p>
+<cite>autoop/core/ml/model/regression/multiple_linear_regression.py</cite></p>
 </section>
 <section id="dsc-0024-use-decisiontreeclassifier-from-scikit-learn-for-decision-tree-model">
-<h1>DSC-0024: Use DecisionTreeClassifier from Scikit-Learn for Decision Tree Model<a class="headerlink" href="#dsc-0024-use-decisiontreeclassifier-from-scikit-learn-for-decision-tree-model" title="Link to this heading">¶</a></h1>
+<h1>DSC-0020: Use DecisionTreeClassifier from Scikit-Learn for Decision Tree Model<a class="headerlink" href="#dsc-0024-use-decisiontreeclassifier-from-scikit-learn-for-decision-tree-model" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-09
 <strong>Decision:</strong> Use Scikit-Learn’s DecisionTreeClassifier as the core model for implementing decision tree classification.
 <strong>Status:</strong> Accepted</p>
@@ -412,10 +348,10 @@ The Scikit-Learn model may have limitations for very large datasets or highly cu
 <p><strong>Alternatives:</strong>
 Implement a custom decision tree algorithm or use other libraries.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0024-decision-tree-implementation-using-sklearn.md</cite></p>
+<cite>autoop/core/ml/model/classification/decision_tree_classifier.py</cite></p>
 </section>
 <section id="dsc-0025-implement-k-nearest-neighbors-knn-using-custom-distance-calculations">
-<h1>DSC-0025: Implement K-Nearest Neighbors (KNN) Using Custom Distance Calculations<a class="headerlink" href="#dsc-0025-implement-k-nearest-neighbors-knn-using-custom-distance-calculations" title="Link to this heading">¶</a></h1>
+<h1>DSC-0021: Implement K-Nearest Neighbors (KNN) Using Custom Distance Calculations<a class="headerlink" href="#dsc-0025-implement-k-nearest-neighbors-knn-using-custom-distance-calculations" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-08
 <strong>Decision:</strong> Implement KNN algorithm manually to allow control over distance metric and neighbor selection.
 <strong>Status:</strong> Accepted</p>
@@ -428,10 +364,10 @@ Slower for large datasets due to O(n) complexity for each prediction.</p>
 <p><strong>Alternatives:</strong>
 Use Scikit-Learn’s KNeighborsClassifier.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0025-implement-KNN-manually.md</cite></p>
+<cite>autoop/core/ml/model/classification/k_nearest_neighbors.py</cite></p>
 </section>
 <section id="dsc-0026-implement-random-forest-classifier-using-scikit-learn">
-<h1>DSC-0026: Implement Random Forest Classifier Using Scikit-Learn<a class="headerlink" href="#dsc-0026-implement-random-forest-classifier-using-scikit-learn" title="Link to this heading">¶</a></h1>
+<h1>DSC-0022: Implement Random Forest Classifier Using Scikit-Learn<a class="headerlink" href="#dsc-0026-implement-random-forest-classifier-using-scikit-learn" title="Link to this heading">¶</a></h1>
 <p><strong>Date:</strong> 2024-11-08
 <strong>Decision:</strong> Use scikit-learn’s RandomForestClassifier to enable classification tasks.
 <strong>Status:</strong> Accepted</p>
@@ -444,39 +380,7 @@ May be computationally expensive for large datasets due to multiple decision tre
 <p><strong>Alternatives:</strong>
 Implement custom random forest logic or use alternative ensemble models.</p>
 <p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0026-use-random-forest-classifier.md</cite></p>
-</section>
-<section id="dsc-0027-streamlit-interface-for-dataset-management">
-<h1>DSC-0027: Streamlit Interface for Dataset Management<a class="headerlink" href="#dsc-0027-streamlit-interface-for-dataset-management" title="Link to this heading">¶</a></h1>
-<p><strong>Date:</strong> 2024-11-08
-<strong>Decision:</strong> Use Streamlit to manage datasets within AutoMLSystem’s registry.
-<strong>Status:</strong> Accepted</p>
-<p><strong>Motivation:</strong>
-Enables an interactive UI for viewing, uploading, and deleting datasets.</p>
-<p><strong>Reason:</strong>
-Streamlit offers an easy-to-use interface for non-technical users.</p>
-<p><strong>Limitations:</strong>
-Requires a Streamlit-compatible environment; not suitable for headless servers.</p>
-<p><strong>Alternatives:</strong>
-Use a command-line interface (CLI) or a standalone web app.</p>
-<p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0027-streamlit-dataset-management.md</cite></p>
-</section>
-<section id="dsc-0028-singleton-pattern-for-automl-system">
-<h1>DSC-0028: Singleton Pattern for AutoML System<a class="headerlink" href="#dsc-0028-singleton-pattern-for-automl-system" title="Link to this heading">¶</a></h1>
-<p><strong>Date:</strong> 2024-11-09
-<strong>Decision:</strong> Use singleton pattern for the AutoMLSystem class to ensure a single shared instance.
-<strong>Status:</strong> Accepted</p>
-<p><strong>Motivation:</strong>
-Avoid multiple instances of AutoMLSystem, which may lead to inconsistent state.</p>
-<p><strong>Reason:</strong>
-Singleton enforces a single source of truth within the system.</p>
-<p><strong>Limitations:</strong>
-Limits flexibility in testing environments where multiple instances may be useful.</p>
-<p><strong>Alternatives:</strong>
-Use dependency injection to manage instances.</p>
-<p><strong>Location:</strong>
-<cite>docs/decisions/DSC-0028-automlsystem-singleton.md</cite></p>
+<cite>autoop/core/ml/model/classification/random_forest.py</cite></p>
 </section>
 
 

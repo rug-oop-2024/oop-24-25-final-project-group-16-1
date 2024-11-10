@@ -10,15 +10,26 @@ from autoop.core.ml.pipeline import Pipeline
 
 st.set_page_config(page_title="Pipeline Deployment", page_icon="🚀")
 
+
+def write_helper_text(text: str):
+    """
+    Display helper text in a lighter color in the Streamlit app.
+
+    Args:
+        text (str): The text to display as helper information.
+    """
+    st.write(f'<p style="color: #888;">{text}', unsafe_allow_html=True)
+
+
 st.write("# 🚀 Pipeline Deployment")
-st.write(
+write_helper_text(
     """
     IMPORTANT INFORMATION:
-
+    <p>
     The uploaded file needs to have a similar structure with the one used
     for the training. If you used nyc_housing.csv as the file
     used for training, then you have to
-    upload the nyc_housing_new_predictions.csv
+    upload the nyc_housing_new_predictions.csv</p>
     """
 )
 

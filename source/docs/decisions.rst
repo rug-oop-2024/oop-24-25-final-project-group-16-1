@@ -18,7 +18,7 @@ Requires each subclass to override methods.
 Use a standard class without enforced method overrides.
 
 **Location:**  
-`docs/decisions/DSC-0001-using-abc-for-model-interface.md`
+`autoop/core/ml/model/model.py`
 
 
 DSC-0002: Use Base64 Encoding for Data Serialization
@@ -41,7 +41,7 @@ Increases data size.
 Use binary storage or implement a custom serialization format.
 
 **Location:**  
-`docs/decisions/DSC-0002-use-base64-encoding.md`
+`autoop/core/ml/artifact.py`
 
 
 DSC-0003: Use Unique ID for Artifact Versioning
@@ -64,7 +64,7 @@ Requires versioning management to avoid conflicts.
 Use a hashing function for a unique identifier.
 
 **Location:**  
-`docs/decisions/DSC-0003-use-unique-id-for-versioning.md`
+`autoop/core/ml/artifact.py`
 
 
 DSC-0004: Extend Artifact Class for Dataset Handling
@@ -87,7 +87,7 @@ Dataset class must align with `Artifact` data handling.
 Create a separate standalone `Dataset` class.
 
 **Location:**  
-`docs/decisions/DSC-0004-extend-artifact-for-dataset.md`
+`autoop/core/ml/dataset.py`
 
 
 DSC-0005: Use Base64 Encoding for Dataset Serialization
@@ -110,7 +110,7 @@ Increases data size.
 Store data as raw binary.
 
 **Location:**  
-`docs/decisions/DSC-0005-use-base64-for-dataset-serialization.md`
+`autoop/core/ml/dataset.py`
 
 
 DSC-0006: Encapsulation for Feature Attributes
@@ -133,7 +133,7 @@ Increases code complexity with additional methods.
 Directly use public attributes without validation.
 
 **Location:**  
-`docs/decisions/DSC-0006-encapsulation-for-feature-attributes.md`
+`autoop/core/ml/feature.py`
 
 
 DSC-0007: Provide Statistics Calculation for Numeric Features
@@ -156,7 +156,7 @@ Only applicable for numeric features; raises error if called on categorical data
 Move statistics calculation to an external function.
 
 **Location:**  
-`docs/decisions/DSC-0007-provide-statistics-for-numeric-features.md`
+`autoop/core/ml/feature.py`
 
 
 DSC-0008: Use Abstract Base Class for Metric Interface
@@ -179,7 +179,7 @@ Each subclass must implement its own `evaluate` method.
 Use a simple base class without enforced abstract methods.
 
 **Location:**  
-`docs/decisions/DSC-0008-use-abc-for-metric-interface.md`
+`autoop/core/ml/metric.py`
 
 
 DSC-0009: Factory Function for Metric Retrieval
@@ -202,7 +202,7 @@ Requires updates when new metrics are added.
 Directly instantiate metrics without a factory function.
 
 **Location:**  
-`docs/decisions/DSC-0009-factory-function-for-metrics.md`
+`autoop/core/ml/metric.py`
 
 
 DSC-0010: Validation of Model Type Based on Target Feature Type
@@ -225,7 +225,7 @@ Additional model types will require validation updates.
 Use a less strict validation and allow flexibility.
 
 **Location:**  
-`docs/decisions/DSC-0010-validation-of-model-type.md`
+`autoop/core/ml/pipeline.py`
 
 
 DSC-0011: Artifact Registration System
@@ -248,7 +248,7 @@ Large data could lead to increased storage requirements.
 Use logging instead of in-memory tracking.
 
 **Location:**  
-`docs/decisions/DSC-0011-artifact-registration-system.md`
+`autoop/core/ml/pipeline.py`
 
 
 DSC-0012: Split Data by Configurable Ratio
@@ -271,7 +271,7 @@ Fixed ratio may not be suitable for all dataset sizes.
 Use cross-validation or k-folds.
 
 **Location:**  
-`docs/decisions/DSC-0012-split-data-by-configurable-ratio.md`
+`autoop/core/ml/pipeline.py`
 
 
 DSC-0013: Use JSON Serialization for Data Persistence
@@ -294,7 +294,7 @@ JSON is not ideal for very large datasets or complex data.
 SQLite or NoSQL databases for larger data needs.
 
 **Location:**  
-`docs/decisions/DSC-0013-split-data-by-configurable-ratio.md`
+`autoop/core/database.py`
 
 
 DSC-0014: Automatic Detection of Feature Types
@@ -317,7 +317,7 @@ May not work for complex data types or features that require custom classificati
 Allow manual feature type input or use a more feature type detection library.
 
 **Location:**  
-`docs/decisions/DSC-0014-automatic-detection-of-feature-types.md`
+`autoop/core/functional/feature.py`
 
 DSC-0015: Preprocessing Features with Scikit-Learn Encoders
 ===========================================================
@@ -339,102 +339,9 @@ Limited to one-hot encoding and standard scaling.
 Custom encoders, MinMaxScaler for numeric scaling, or other libraries.
 
 **Location:**  
-`docs/decisions/DSC-0015-preprocess-features-with-encoders.md`
+`autoop/core/functional/preprocessing.py`
 
-
-DSC-0016: Testing Database Persistence and Retrieval
-====================================================
-
-**Date:** 2024-11-08  
-**Decision:** Use unittest framework for testing database CRUD operations and persistence in a temporary storage location.  
-**Status:** Accepted  
-
-**Motivation:**  
-Ensure database operations are reliable and persist across sessions.
-
-**Reason:**  
-Critical for data integrity and accurate data retrieval.
-
-**Limitations:**  
-Tests rely on local storage, which may not reflect behavior in distributed or cloud environments.
-
-**Alternatives:**  
-Use Pytest for enhanced flexibility and parameterized tests.
-
-**Location:**  
-`docs/decisions/DSC-0016-database-persistence-testing.md`
-
-
-DSC-0017: Testing Feature Type Detection in Datasets
-====================================================
-
-**Date:** 2024-11-08  
-**Decision:** Use sklearn's Iris and Adult datasets to test feature type detection functionality across categorical and numerical features.  
-**Status:** Accepted  
-
-**Motivation:**  
-Validate feature type detection in datasets containing mixed types.
-
-**Reason:**  
-Essential to ensure model compatibility and preprocessing accuracy.
-
-**Limitations:**  
-Limited to specific sklearn datasets, may require expansion for custom datasets.
-
-**Alternatives:**  
-Use synthetic datasets with controlled feature types.
-
-**Location:**  
-`docs/decisions/DSC-0017-feature-type-detection-testing.md`
-
-
-DSC-0018: Pipeline Testing for Adult Dataset
-============================================
-
-**Date:** 2024-11-08  
-**Decision:** Use the Adult dataset from sklearn's OpenML to test the pipeline setup, feature preprocessing, data splitting, model training, and evaluation.  
-**Status:** Accepted  
-
-**Motivation:**  
-Ensure pipeline functionality for regression tasks with numeric and categorical features.
-
-**Reason:**  
-Testing real-world data allows robust validation of pipeline components.
-
-**Limitations:**  
-Focused on a single dataset, which may not cover all cases.
-
-**Alternatives:**  
-Generate synthetic datasets with controlled feature distributions.
-
-**Location:**  
-`docs/decisions/DSC-0018-pipeline-testing-adult-dataset.md`
-
-
-DSC-0019: LocalStorage Class for Testing Storage Behavior
-=========================================================
-
-**Date:** 2024-11-08  
-**Decision:** Use LocalStorage for testing saving, loading, deleting, and listing data to verify local storage functionality.  
-**Status:** Accepted  
-
-**Motivation:**  
-Ensuring file storage functions as expected within the local file system.
-
-**Reason:**  
-LocalStorage provides a file-based storage interface for persisting artifacts.
-
-**Limitations:**  
-Tests depend on OS file handling and may require temp directories.
-
-**Alternatives:**  
-Use a mock storage or in-memory storage.
-
-**Location:**  
-`docs/decisions/DSC-0019-localstorage-class-for-testing.md`
-
-
-DSC-0020: Model Selection with Factory Method
+DSC-0016: Model Selection with Factory Method
 =============================================
 
 **Date:** 2024-11-08  
@@ -454,9 +361,9 @@ Requires updating `models_map` for new models.
 Use individual import and instantiation in each script.
 
 **Location:**  
-`docs/decisions/DSC-0020-model-selection-with-factory-method.md`
+`autoop/core/ml/model/__init__.py`
 
-DSC-0021: Lasso Regression Model Implementation
+DSC-0017: Lasso Regression Model Implementation
 ===============================================
 
 **Date:** 2024-11-09  
@@ -476,10 +383,10 @@ Regularization strength must be manually tuned for optimal performance.
 Ridge regression, Elastic Net.
 
 **Location:**  
-`docs/decisions/DSC-0021-lasso-regression-model.md`
+`autoop/core/ml/model/regression/lasso_regression.py`
 
 
-DSC-0022: Linear Regression with Gradient Descent
+DSC-0018: Linear Regression with Gradient Descent
 =================================================
 
 **Date:** 2024-11-09  
@@ -499,10 +406,10 @@ Gradient descent can be slow for large datasets and may require tuning.
 Use libraries like scikit-learn for optimized, built-in linear regression.
 
 **Location:**  
-`docs/decisions/DSC-0022-linear-regression-with-gradient-descent.md`
+`autoop/core/ml/model/regression/linear_regression.py`
 
 
-DSC-0023: Use LinearRegressionModel for Multiple Linear Regression
+DSC-0019: Use LinearRegressionModel for Multiple Linear Regression
 ==================================================================
 
 **Date:** 2024-11-09  
@@ -522,10 +429,10 @@ Inherits all limitations of the LinearRegressionModel, such as slow convergence 
 Implement multiple linear regression separately or use a third-party library.
 
 **Location:**  
-`docs/decisions/DSC-0023-multiple-linear-regression-using-linear-regression.md`
+`autoop/core/ml/model/regression/multiple_linear_regression.py`
 
 
-DSC-0024: Use DecisionTreeClassifier from Scikit-Learn for Decision Tree Model
+DSC-0020: Use DecisionTreeClassifier from Scikit-Learn for Decision Tree Model
 ==============================================================================
 
 **Date:** 2024-11-09  
@@ -545,10 +452,10 @@ The Scikit-Learn model may have limitations for very large datasets or highly cu
 Implement a custom decision tree algorithm or use other libraries.
 
 **Location:**  
-`docs/decisions/DSC-0024-decision-tree-implementation-using-sklearn.md`
+`autoop/core/ml/model/classification/decision_tree_classifier.py`
 
 
-DSC-0025: Implement K-Nearest Neighbors (KNN) Using Custom Distance Calculations
+DSC-0021: Implement K-Nearest Neighbors (KNN) Using Custom Distance Calculations
 ================================================================================
 
 **Date:** 2024-11-08  
@@ -568,10 +475,10 @@ Slower for large datasets due to O(n) complexity for each prediction.
 Use Scikit-Learn's KNeighborsClassifier.
 
 **Location:**  
-`docs/decisions/DSC-0025-implement-KNN-manually.md`
+`autoop/core/ml/model/classification/k_nearest_neighbors.py`
 
 
-DSC-0026: Implement Random Forest Classifier Using Scikit-Learn
+DSC-0022: Implement Random Forest Classifier Using Scikit-Learn
 ===============================================================
 
 **Date:** 2024-11-08  
@@ -591,50 +498,4 @@ May be computationally expensive for large datasets due to multiple decision tre
 Implement custom random forest logic or use alternative ensemble models.
 
 **Location:**  
-`docs/decisions/DSC-0026-use-random-forest-classifier.md`
-
-
-DSC-0027: Streamlit Interface for Dataset Management
-====================================================
-
-**Date:** 2024-11-08  
-**Decision:** Use Streamlit to manage datasets within AutoMLSystem's registry.  
-**Status:** Accepted  
-
-**Motivation:**  
-Enables an interactive UI for viewing, uploading, and deleting datasets.
-
-**Reason:**  
-Streamlit offers an easy-to-use interface for non-technical users.
-
-**Limitations:**  
-Requires a Streamlit-compatible environment; not suitable for headless servers.
-
-**Alternatives:**  
-Use a command-line interface (CLI) or a standalone web app.
-
-**Location:**  
-`docs/decisions/DSC-0027-streamlit-dataset-management.md`
-
-
-DSC-0028: Singleton Pattern for AutoML System
-=============================================
-
-**Date:** 2024-11-09  
-**Decision:** Use singleton pattern for the AutoMLSystem class to ensure a single shared instance.  
-**Status:** Accepted  
-
-**Motivation:**  
-Avoid multiple instances of AutoMLSystem, which may lead to inconsistent state.
-
-**Reason:**  
-Singleton enforces a single source of truth within the system.
-
-**Limitations:**  
-Limits flexibility in testing environments where multiple instances may be useful.
-
-**Alternatives:**  
-Use dependency injection to manage instances.
-
-**Location:**  
-`docs/decisions/DSC-0028-automlsystem-singleton.md`
+`autoop/core/ml/model/classification/random_forest.py`
