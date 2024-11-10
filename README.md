@@ -1,3 +1,9 @@
+## DOCUMENTATION INFO
+In order to open the HTML website where we placed out design decisions, you need to do the following command on the terminal on the project's root: 
+```bash
+open build/html/index.html
+```
+
 # AutOOP your first AutoML library
 
 🎉🥳 Congratulations on making it to this final project! We are excited to see what you can do.
@@ -153,32 +159,33 @@ If you did not implement the feature
 
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|--------------------------|---------|         
-| Up-to-date requirements.txt           | NF           |                      |         | |
-| `ML/detect-features`                  | FN           |                      |         | |
-| `ML/artifact`                         | NF           |                      |         | |
-| `ML/feature`                          | NF           |                      |         | |
-| `ML/metric`                           | NF           |                      |         | |
-| `ML/metric/extensions`                | FN           |                      |         | |
-| `ML/model`                            | NF           |                      |         | |
-| `ML/model/extensions`                 | FN           |                      |         | |
-| `ML/pipeline/evaluation`              | FN           |                      |         | | 
-| `ST/page/datasets`                    | NF           |                      |         | |
-| `ST/datasets/management/create`       | FN           |                      |         | |
-| `ST/datasets/management/save`         | FN           |                      |         | |
-| `ST/page/modelling`                   | NF           |                      |         | |
-| `ST/modelling/datasets/list`          | FN           |                      |         | |
-| `ST/modelling/datasets/features`      | FN           |                      |         | |
-| `ST/modelling/models`                 | FN           |                      |         | |
-| `ST/modelling/pipeline/split`         | FN           |                      |         | |
-| `ST/modelling/pipeline/metrics`       | FN           |                      |         | |
-| `ST/modelling/pipeline/summary`       | FN           |                      |         | |
-| `ST/modelling/pipeline/train`         | FN           |                      |         | |
-| `ST/modelling/pipeline/save`          | FN           |                      |         | |
-| `ST/page/deployment`                  | FN           |                      |         | |
-| `ST/deployment/load`                  | FN           |                      |         | |
-| `ST/deployment/predict`               | FN           |                      |         | |
+| Up-to-date requirements.txt           | NF           |   Both               |     X   | |
+| `ML/detect-features`                  | FN           |   Deborah            |     X   | |
+| `ML/artifact`                         | NF           |   Both               |     X   | |
+| `ML/feature`                          | NF           |   Deborah            |     X   | |
+| `ML/metric`                           | NF           |   Ana                |     X   | |
+| `ML/metric/extensions`                | FN           |   Ana                |     X   | |
+| `ML/model`                            | NF           |   Both               |     X   | |
+| `ML/model/extensions`                 | FN           |   Both               |     X   | |
+| `ML/pipeline/evaluation`              | FN           |   Ana                |     X   | | 
+| `ST/page/datasets`                    | NF           |   Deborah            |     X   | |
+| `ST/datasets/management/create`       | FN           |   Ana                |     X   | |
+| `ST/datasets/management/save`         | FN           |   Ana                |     X   | |
+| `ST/page/modelling`                   | NF           |   Deborah            |     X   | |
+| `ST/modelling/datasets/list`          | FN           |   Deborah            |     X   | |
+| `ST/modelling/datasets/features`      | FN           |   Deborah            |     X   | |
+| `ST/modelling/models`                 | FN           |   Deborah            |     X   | |
+| `ST/modelling/pipeline/split`         | FN           |   Deborah            |     X   | |
+| `ST/modelling/pipeline/metrics`       | FN           |   Deborah            |     X   | |
+| `ST/modelling/pipeline/summary`       | FN           |   Deborah            |     X   | |
+| `ST/modelling/pipeline/train`         | FN           |   Ana                |     X   | |
+| `ST/modelling/pipeline/save`          | FN           |   Ana                |     X   | |
+| `ST/page/deployment`                  | FN           |   Ana                |     X   | |
+| `ST/deployment/load`                  | FN           |   Ana                |     X   | |
+| `ST/deployment/predict`               | FN           |   Ana                |     X   | |
 
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|---------|-----|
-|           |            |                      |         | |
+| `ST/datasets/management/delete`       | NF           |   Ana                |     X   |     |
+| `/build /source(sphinx website)`      | NF           |   Deborah            |     X   |     |

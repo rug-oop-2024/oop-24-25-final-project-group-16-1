@@ -1,0 +1,26 @@
+Locality,Bedrooms,Bathrooms,Price,Size
+Manhattan,6,4,15000000,800
+Brooklyn,1,1,3000,30
+Queens,12,8,100,1500
+Staten Island,8,5,2000000,500
+Bronx,2,1,250000,70
+Manhattan,10,6,50000000,2000
+Brooklyn,3,2,60000,45
+Queens,20,10,500,2500
+Staten Island,5,3,750000,300
+Bronx,4,2,450000,90
+Manhattan,15,7,80000000,2500
+Brooklyn,2,1,5000,40
+Queens,25,15,2000,3000
+Staten Island,7,4,3000000,600
+Bronx,3,2,120000,80
+Manhattan,8,5,65000000,1500
+Brooklyn,4,3,80000,55
+Queens,18,10,1200,2200
+Staten Island,1,1,150000,50
+Bronx,5,3,600000,100
+Manhattan,12,8,95000000,3000
+Brooklyn,6,4,10000,75
+Queens,30,20,2500,4000
+Staten Island,9,6,4000000,800
+Bronx,7,4,350000,110
