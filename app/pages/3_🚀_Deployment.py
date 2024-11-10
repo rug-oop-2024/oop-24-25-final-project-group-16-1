@@ -68,7 +68,7 @@ if pipeline_files:
             st.write(f"Target Feature: {target_feature}")
             st.write(f"Split Ratio: {split}")
 
-        if model_name in CLASSIFICATION_MODELS:
+        if model.name in CLASSIFICATION_MODELS:
             input_features_wrapped = [
                 Feature(
                     name=f, feature_type=(
@@ -82,9 +82,7 @@ if pipeline_files:
             )
         else:
             input_features_wrapped = [
-                Feature(
-                    name=f, feature_type="numerical", values=[]
-                )
+                Feature(name=f, feature_type="numerical", values=[])
                 for f in input_features
             ]
             target_feature_wrapped = Feature(
@@ -107,7 +105,6 @@ if pipeline_files:
         dataset_name = st.text_input("Enter dataset name")
         if dataset_name:
             asset_path = f"dataset/{dataset_name}.csv"
-
             new_dataset = Dataset.from_dataframe(
                 data=data, name=dataset_name, asset_path=asset_path,
                 version="1.0.0"
