@@ -32,7 +32,6 @@ if pipeline_files:
         selected_pipeline = load(f)
 
     if isinstance(selected_pipeline, dict):
-        st.write("Here's its content:")
 
         metadata = selected_pipeline.get("metadata", {})
         metrics_name = metadata["metrics"]
@@ -61,12 +60,12 @@ if pipeline_files:
         target_feature = metadata["target_feature"]
         split = metadata["split_ratio"]
 
-        with st.expander("View Pipeline Summary"):
-            st.write(f"Metrics: {', '.join(metrics_name)}")
-            st.write(f"Model: {model_name}")
-            st.write(f"Input Features: {', '.join(input_features)}")
-            st.write(f"Target Feature: {target_feature}")
-            st.write(f"Split Ratio: {split}")
+        st.subheader("Pipeline Summary")
+        st.write(f"Metrics: {', '.join(metrics_name)}")
+        st.write(f"Model: {model_name}")
+        st.write(f"Input Features: {', '.join(input_features)}")
+        st.write(f"Target Feature: {target_feature}")
+        st.write(f"Split Ratio: {split}")
 
         if model.name in CLASSIFICATION_MODELS:
             input_features_wrapped = [
@@ -102,24 +101,22 @@ if pipeline_files:
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
 
-        dataset_name = st.text_input("Enter dataset name")
-        if dataset_name:
-            asset_path = f"dataset/{dataset_name}.csv"
-            new_dataset = Dataset.from_dataframe(
-                data=data, name=dataset_name, asset_path=asset_path,
-                version="1.0.0"
-            )
-            selected_pipeline = Pipeline(
-                metrics=metrics,
-                dataset=new_dataset,
-                model=model,
-                input_features=input_features_wrapped,
-                target_feature=target_feature_wrapped,
-                split=split,
-            )
-            predictions = selected_pipeline.execute()
-            with st.expander("View New Training Results"):
-                st.write(predictions)
+        asset_path = f"dataset/{selected_name}_addition.csv"
+        new_dataset = Dataset.from_dataframe(
+            data=data, name=selected_name, asset_path=asset_path,
+            version="1.0.0"
+        )
+        selected_pipeline = Pipeline(
+            metrics=metrics,
+            dataset=new_dataset,
+            model=model,
+            input_features=input_features_wrapped,
+            target_feature=target_feature_wrapped,
+            split=split,
+        )
+        predictions = selected_pipeline.execute()
+        with st.expander("View New Training Results"):
+            st.write(predictions)
 
     #    if st.button("Delete Pipeline"):
     #    AutoMLSystem.get_instance().registry.delete(f"{selected_name}_1.0.0")

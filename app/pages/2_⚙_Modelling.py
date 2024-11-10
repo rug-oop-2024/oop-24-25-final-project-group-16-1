@@ -158,12 +158,11 @@ if datasets:
             )
 
             if st.button("Train Pipeline"):
-                st.write("### Training in Progress")
+                st.write("### Training...")
                 try:
                     pipeline_result = pipeline.execute()
                     st.success("Pipeline trained successfully!")
 
-                    st.write("### Training Results")
                     write_helper_text(
                         "Press 'View Training Result' to expand the results."
                     )

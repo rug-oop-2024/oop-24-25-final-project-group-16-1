@@ -173,12 +173,13 @@ If you did not implement the feature
 | `ST/modelling/pipeline/metrics`       | FN           |   Deborah            |     X   | |
 | `ST/modelling/pipeline/summary`       | FN           |   Deborah            |     X   | |
 | `ST/modelling/pipeline/train`         | FN           |   Ana                |     X   | |
-| `ST/modelling/pipeline/save`          | FN           |   Ana                |         | |
-| `ST/page/deployment`                  | FN           |   Ana                |         | |
-| `ST/deployment/load`                  | FN           |   Ana                |         | |
+| `ST/modelling/pipeline/save`          | FN           |   Ana                |     X   | |
+| `ST/page/deployment`                  | FN           |   Ana                |     X   | |
+| `ST/deployment/load`                  | FN           |   Ana                |     X   | |
 | `ST/deployment/predict`               | FN           |   Ana                |         | |
 
 If you add extra features, please indicate them below:
 | Requirement                           | Type (FN/NF) | Implemented by       | Implementation Completed (add X if done) | Comment |
 |-------------------------------------- |--------------|----------------------|---------|-----|
-| `ST/datasets/management/delete`       | FN           |   Ana                |     X   |     |
+| `ST/datasets/management/delete`       | NF           |   Ana                |     X   |     |
+| `/build /source(sphinx website)`      | NF           |   Deborah            |     X   |     |
