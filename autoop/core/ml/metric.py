@@ -72,6 +72,13 @@ class Metric(ABC):
         pass
 
     def __repr__(self) -> str:
+        """
+        Returns a string representation of the class name,
+        useful for debugging and logging purposes.
+
+        Returns:
+            str: The name of the class.
+        """
         return self.__class__.__name__
 
 
@@ -101,6 +108,12 @@ class MeanSquaredError(Metric):
         return np.mean((y_true - y_pred) ** 2)
 
     def __str__(self) -> str:
+        """
+        Returns the name of the metric as a string.
+
+        Returns:
+            str: The name "mean_squared_error" representing this metric.
+        """
         return "mean_squared_error"
 
 
@@ -128,6 +141,12 @@ class MeanAbsoluteError(Metric):
         return np.mean(np.abs(np.array(y_true) - np.array(y_pred)))
 
     def __str__(self) -> str:
+        """
+        Returns the name of the metric as a string.
+
+        Returns:
+            str: The name "mean_absolute_error" representing this metric.
+        """
         return "mean_absolute_error"
 
 
@@ -158,6 +177,12 @@ class R2Score(Metric):
         return 1 - (ss_residual / ss_total) if ss_total > 0 else 0.0
 
     def __str__(self) -> str:
+        """
+        Returns the name of the metric as a string.
+
+        Returns:
+            str: The name "r2_score" representing this metric.
+        """
         return "r2_score"
 
 
@@ -189,6 +214,12 @@ class Precision(Metric):
         )
 
     def __str__(self) -> str:
+        """
+        Returns the name of the metric as a string.
+
+        Returns:
+            str: The name "precision" representing this metric.
+        """
         return "precision"
 
 
@@ -216,6 +247,12 @@ class Recall(Metric):
         return true_positive / actual_positive if actual_positive > 0 else 0.0
 
     def __str__(self) -> str:
+        """
+        Returns the name of the metric as a string.
+
+        Returns:
+            str: The name "recall" representing this metric.
+        """
         return "recall"
 
 
@@ -239,4 +276,10 @@ class Accuracy(Metric):
         return np.mean(y_true == y_pred)
 
     def __str__(self) -> str:
+        """
+        Returns the name of the metric as a string.
+
+        Returns:
+            str: The name "accuracy" representing this metric.
+        """
         return "accuracy"
