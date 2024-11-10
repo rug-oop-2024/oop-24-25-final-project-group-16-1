@@ -98,7 +98,7 @@ if pipeline_files:
         """
     )
 
-    uploaded_file = st.file_uploader("Choose a file")
+    uploaded_file = st.file_uploader("Choose a file", type=["csv"])
 
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)

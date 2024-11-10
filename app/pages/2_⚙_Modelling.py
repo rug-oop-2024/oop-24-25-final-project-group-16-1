@@ -89,11 +89,11 @@ if datasets:
             if target_feature_type == "categorical":
                 task_type = "classification"
                 available_models = CLASSIFICATION_MODELS
-                available_metrics = METRICS[:3]
+                available_metrics = METRICS[3:]
             elif target_feature_type == "numeric":
                 task_type = "regression"
                 available_models = REGRESSION_MODELS
-                available_metrics = METRICS[3:]
+                available_metrics = METRICS[:3]
             else:
                 task_type = "Unknown"
                 available_models = []
